@@ -1,0 +1,10 @@
+.info {
+    font-size: 30px;
+}
+
+body {
+    background-image: url("/Users/aaronhirsimaki/PortfolioNet/portfolio/src/images/portfolioBackground.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
