@@ -3,7 +3,7 @@ export default function Goals() {
     <>
       <header></header>
       <body>
-        <p>
+        <p className="info">
           I have learned a lot during my studies, but I am aware that there are
           still plenty of development opportunities. Information technology and
           programming are my passions, and I want to work in a competent team
