@@ -2,7 +2,7 @@ export default function Goals() {
   return (
     <>
       <header></header>
-      <body>
+      <main>
         <p className="info">
           I have learned a lot during my studies, but I am aware that there are
           still plenty of development opportunities. Information technology and
@@ -12,7 +12,7 @@ export default function Goals() {
           new technologies so that I can grow as a professional and make my own
           contribution to the teams success.
         </p>
-      </body>
+      </main>
       <footer></footer>
     </>
   );

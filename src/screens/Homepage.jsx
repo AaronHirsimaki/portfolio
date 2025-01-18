@@ -6,7 +6,7 @@ function Homepage() {
       <header>
         <h1>About me</h1>
       </header>
-      <body>
+      <main>
         <div className="flex_container">
           <div className="flex_item">
             <p className="info">
@@ -40,9 +40,11 @@ function Homepage() {
           </div>
           <div className="flex_container_contact">
             <div className="flex_item">
+              <img src="src/images/gitti.png" alt="iconi" />
               <a href="https://github.com/AaronHirsimaki">Github</a>
             </div>
             <div className="flex_item">
+              <img src="src/images/linkkari.png" alt="iconi" />
               <a href="https://www.linkedin.com/in/aaron-hirsim%C3%A4ki-848155268/">
                 Linkedin
               </a>
@@ -52,7 +54,7 @@ function Homepage() {
             <p className="contactInfo">CV</p>
           </div>
         </div>
-      </body>
+      </main>
       <footer></footer>
     </>
   );

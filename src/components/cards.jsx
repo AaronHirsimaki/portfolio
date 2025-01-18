@@ -11,7 +11,7 @@ export default function Cards({ image, title, description, link }) {
           rel="noopener noreferrer"
           className="project-link"
         >
-          Lue lisää
+          Read more here
         </a>
       </div>
     </div>

@@ -13,11 +13,11 @@ export default function Important() {
     },
     {
       id: 1,
-      image: "src/images/FreeGamesListLogo.jpg",
-      title: "FreeGamesList",
+      image: "src/images/LähiroskiksetLogo.png",
+      title: "Lähiroskikset",
       description:
-        "Project done using React Native and a free API containing information about free games.",
-      link: "https://github.com/AaronHirsimaki/freeGamesApp",
+        "Project about a web application to locat trashcans. Done by using openstreetmap and javascript.",
+      link: "https://github.com/orgs/Garbage-people/repositories",
     },
   ];
 
@@ -25,7 +25,10 @@ export default function Important() {
     <>
       <header></header>
       <main>
-        <div className="info">
+        <div>
+          <h2 className="header">Skils and courses</h2>
+        </div>
+        <div className="info-skils">
           <p>- University tutor training and tutor activities</p>
           <p>- Board member of the Atkins substance organization</p>
           <p>- Basics of Docker, Kubernetes and Openshift</p>
@@ -33,6 +36,9 @@ export default function Important() {
           <p>- React programming</p>
           <p>- React native Mobile programming</p>
           <p>- Three software project courses</p>
+        </div>
+        <div>
+          <h2 className="header">Projects of mine</h2>
         </div>
         <div className="projects-grid">
           {projectData.map((project) => (

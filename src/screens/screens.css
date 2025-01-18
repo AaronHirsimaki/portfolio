@@ -2,6 +2,10 @@
     font-size: 30px;
 }
 
+.info-skils {
+    font-size: 20px;
+}
+
 .contactInfo {
     font-size: 20px;
 }
@@ -11,6 +15,10 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+}
+
+.header {
+    font-size: 50px;
 }
 
 .flex_container {
@@ -82,4 +90,38 @@ body {
 
 .project-link:hover {
     text-decoration: underline;
+}
+
+/* Navigaatiopalkki */
+.navbar {
+    padding: 1rem 2rem;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: center; /* Keskittää linkit */
+    align-items: center;
+}
+
+/* Linkit */
+.navbar-link {
+    margin: 0 1rem;
+    text-decoration: none;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition:
+        color 0.3s ease,
+        border-bottom 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.navbar-link:hover {
+    color: purple;
+    border-bottom: 2px solid purple;
+}
+
+.navbar {
+    text-align: center;
+    padding: 1rem;
 }
