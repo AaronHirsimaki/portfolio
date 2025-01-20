@@ -40,12 +40,13 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
+    color: white;
 }
 
 .project-card {
     display: flex;
     flex-direction: column;
-    background-color: #ffffff;
+    background-color: #2e3033;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -68,6 +69,7 @@ body {
 .project-content {
     padding: 16px;
     text-align: left;
+    color: white;
 }
 
 .project-content h3 {

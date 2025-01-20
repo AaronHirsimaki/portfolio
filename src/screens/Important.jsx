@@ -12,12 +12,20 @@ export default function Important() {
       link: "https://github.com/AaronHirsimaki/freeGamesApp",
     },
     {
-      id: 1,
+      id: 2,
       image: "src/images/LähiroskiksetLogo.png",
       title: "Lähiroskikset",
       description:
         "Project about a web application to locat trashcans. Done by using openstreetmap and javascript.",
       link: "https://github.com/orgs/Garbage-people/repositories",
+    },
+    {
+      id: 3,
+      image: "src/images/PikaPakka.png",
+      title: "PikaPakka Korttipakka",
+      description:
+        "Tis is a project where I wanted to learnd about typescript and and development with typescript. I did use AI as help to understand typescript because I have not had a course about it",
+      link: "https://github.com/AaronHirsimaki/Korttipakka",
     },
   ];
 
@@ -38,7 +46,7 @@ export default function Important() {
           <p>- Three software project courses</p>
         </div>
         <div>
-          <h2 className="header">Projects of mine</h2>
+          <h2 className="header">Major Projects of mine</h2>
         </div>
         <div className="projects-grid">
           {projectData.map((project) => (
