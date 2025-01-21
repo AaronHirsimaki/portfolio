@@ -1,17 +1,24 @@
 .info {
     font-size: 30px;
+    font-family: "Chakra Petch", serif;
 }
 
 .info-skils {
     font-size: 20px;
+    font-family: "Chakra Petch", serif;
 }
 
-.skils-container{
+.skils-container {
     max-width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-content: center;
+}
+
+.header-skils {
+    font-size: 40px;
+    font-family: "Jersey 15", serif;
 }
 
 .skils-box {
@@ -21,6 +28,7 @@
 
 .contactInfo {
     font-size: 20px;
+    font-family: "Jersey 15", serif;
 }
 
 body {
@@ -31,7 +39,8 @@ body {
 }
 
 .header {
-    font-size: 50px;
+    font-size: 40px;
+    font-family: "Jersey 15", serif;
 }
 
 .flex_container {
@@ -59,7 +68,8 @@ body {
 .project-card {
     display: flex;
     flex-direction: column;
-    background-color: #2e3033;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -83,6 +93,7 @@ body {
     padding: 16px;
     text-align: left;
     color: white;
+    font-family: "Chakra Petch", serif;
 }
 
 .project-content h3 {
@@ -110,6 +121,10 @@ body {
 /* Navigaatiopalkki */
 .navbar {
     padding: 1rem 2rem;
+}
+
+.navbar-text {
+    font-family: "Press Start 2P", serif;
 }
 
 .navbar-container {

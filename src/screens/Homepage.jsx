@@ -3,7 +3,7 @@ import "./screens.css";
 function Homepage() {
   return (
     <>
-      <header>
+      <header className="header">
         <h1>About me</h1>
       </header>
       <main>
@@ -23,35 +23,6 @@ function Homepage() {
               databases. In addition, I have familiarized myself with the use of
               Docker to support software development.
             </p>
-          </div>
-          <div className="flex_item">
-            <p className="info">"Miten vittu flexbox toimii ei saatana"</p>
-          </div>
-          <div className="flex_item">
-            <h2>Contacts</h2>
-          </div>
-          <div className="flex_container_contact">
-            <div className="flex_item">
-              <p className="contactInfo">Email: hirsimakiaaronn@gmail.com</p>
-            </div>
-            <div className="flex_item">
-              <p className="contactInfo">Phone: 123456789</p>
-            </div>
-          </div>
-          <div className="flex_container_contact">
-            <div className="flex_item">
-              <img src="src/images/gitti.png" alt="iconi" />
-              <a href="https://github.com/AaronHirsimaki">Github</a>
-            </div>
-            <div className="flex_item">
-              <img src="src/images/linkkari.png" alt="iconi" />
-              <a href="https://www.linkedin.com/in/aaron-hirsim%C3%A4ki-848155268/">
-                Linkedin
-              </a>
-            </div>
-          </div>
-          <div className="flex_item">
-            <p className="contactInfo">CV</p>
           </div>
         </div>
       </main>

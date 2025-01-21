@@ -4,6 +4,7 @@ import Navbar from "./navbar";
 import Homepage from "./screens/Homepage";
 import Important from "./screens/Important";
 import Goals from "./screens/Goals";
+import Contacts from "./screens/Contacts";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/important" element={<Important />} />
         <Route path="/goals" element={<Goals />} />
+        <Route path="/contacts" element={<Contacts />} />
       </Routes>
     </BrowserRouter>
   );
