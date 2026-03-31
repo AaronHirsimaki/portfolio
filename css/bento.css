@@ -1,0 +1,239 @@
+/* ===== Bento Grid Layout ===== */
+
+/* Hide old header/nav */
+.header { display: none; }
+
+/* Page wrapper */
+.bento-page {
+  min-height: 100vh;
+  padding: var(--space-2xl) var(--space-lg);
+  max-width: 1200px;
+  margin-inline: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header above grid */
+.bento-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  padding-top: var(--space-xl);
+}
+
+.bento-header__name {
+  font-family: var(--ff-display);
+  font-size: var(--fs-hero);
+  font-weight: 700;
+  color: var(--clr-heading);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+}
+
+.bento-header__tagline {
+  font-size: var(--fs-md);
+  color: var(--clr-text-muted);
+  max-width: 600px;
+  margin-inline: auto;
+  line-height: 1.5;
+}
+
+/* ===== Grid ===== */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* ===== Card (collapsed / miniature state) ===== */
+.bento-card {
+  --content-render-width: 1100px;
+  background: var(--clr-bg-card);
+  border: 2px solid var(--clr-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  /* Fixed aspect ratio — all cards same shape */
+  aspect-ratio: 4 / 3;
+  transition: border-color 250ms ease, box-shadow 250ms ease;
+}
+
+.bento-card:hover {
+  border-color: var(--clr-pink);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Label overlay — always visible on the miniature */
+.bento-card__label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--ff-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--clr-heading);
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 40%, transparent);
+  pointer-events: none;
+}
+
+/* Content wrapper — scaled down to fit the card */
+.bento-card__content {
+  width: var(--content-render-width);
+  transform-origin: top left;
+  /* Scale is set dynamically by JS */
+  transform: scale(var(--card-scale, 0.3));
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ===== Zoom transition (applied before values change) ===== */
+.bento-card.bento-card--zooming {
+  position: fixed;
+  z-index: 1000;
+  aspect-ratio: auto;
+  overflow: hidden;
+  transition: top 650ms cubic-bezier(0.22, 1, 0.36, 1),
+              left 650ms cubic-bezier(0.22, 1, 0.36, 1),
+              width 650ms cubic-bezier(0.22, 1, 0.36, 1),
+              height 650ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-radius 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Content scales along with the card during zoom */
+.bento-card.bento-card--zooming .bento-card__content {
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ===== Expanded state (after zoom-in finishes) ===== */
+.bento-card.bento-card--expanded {
+  position: fixed;
+  z-index: 1000;
+  border: none;
+  border-radius: 0;
+  cursor: default;
+  overflow-y: auto;
+  overflow-x: hidden;
+  aspect-ratio: auto;
+}
+
+.bento-card.bento-card--expanded:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.bento-card.bento-card--expanded .bento-card__label {
+  display: none;
+}
+
+.bento-card.bento-card--expanded .bento-card__content {
+  position: relative;
+  width: 100%;
+  transform: none;
+  pointer-events: auto;
+  padding-top: var(--space-3xl);
+  padding-bottom: var(--space-3xl);
+}
+
+.bento-card.bento-card--expanded .section {
+  padding-block: var(--space-2xl);
+}
+
+/* ===== Back Button ===== */
+.bento-back {
+  display: none;
+  position: fixed;
+  top: var(--space-lg);
+  left: var(--space-lg);
+  z-index: 1100;
+  background: rgba(17, 17, 17, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--border-radius-sm);
+  color: var(--clr-heading);
+  font-family: var(--ff-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: background 150ms ease, border-color 150ms ease, opacity 200ms ease;
+  opacity: 0;
+}
+
+.bento-back:hover {
+  background: rgba(30, 30, 30, 0.95);
+  border-color: var(--clr-pink);
+}
+
+.bento-back.bento-back--visible {
+  display: inline-flex;
+  opacity: 1;
+}
+
+/* Hide other cards only while a card is fully expanded (not during collapse) */
+.bento-grid--has-expanded .bento-card:not(.bento-card--expanded) {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+/* During collapse the grid is visible — cards fade back in */
+.bento-card:not(.bento-card--zooming) {
+  transition: opacity 300ms ease;
+}
+
+.bento-grid--has-expanded ~ .footer {
+  display: none;
+}
+
+body:has(.bento-card--expanded) .bento-header {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 639px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-card {
+    --content-render-width: 900px;
+  }
+
+  .bento-header__name {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .bento-card {
+    --content-render-width: 1100px;
+  }
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .bento-card.bento-card--zooming {
+    transition: none;
+  }
+}
