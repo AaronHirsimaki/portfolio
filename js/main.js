@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const palette = ['#ff6b9d', '#ffc800', '#2dd4bf', '#60a5fa', '#a78bfa', '#ff7170'];
 
   // --- Bento grid ---
   const bentoGrid = document.querySelector('.bento-grid');
@@ -180,18 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- Interactive color cycling on tags ---
-  document.querySelectorAll('.tag').forEach(tag => {
-    tag.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const color = palette[Math.floor(Math.random() * palette.length)];
-      tag.style.borderColor = color;
-      tag.style.color = color;
-      tag.style.transform = 'scale(1.1)';
-      setTimeout(() => { tag.style.transform = ''; }, 200);
-    });
-  });
-
   // Stop link clicks from expanding card
   document.querySelectorAll('.bento-card a').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -266,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else if (side === 1) { x = W + 10; y = Math.random() * H; }
       else if (side === 2) { x = Math.random() * W; y = H + 10; }
       else { x = -10; y = Math.random() * H; }
-      const speed = 0.8 + Math.random() * 0.8 + score * 0.01;
+      const speed = 0.8 + Math.random() * 0.8;
       const r = 6 + Math.random() * 4;
       enemies.push({ x, y, r, speed });
     }
@@ -301,8 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       spawnTimer++;
-      const spawnRate = Math.max(30, 90 - score * 2);
-      if (spawnTimer >= spawnRate) { spawnEnemy(); spawnTimer = 0; }
+      if (spawnTimer >= 70) { spawnEnemy(); spawnTimer = 0; }
 
       for (let i = enemies.length - 1; i >= 0; i--) {
         const e = enemies[i];
@@ -428,7 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (gameOver && running) {
         e.stopPropagation();
         initGame();
-        loop();
       }
     });
 
