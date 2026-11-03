@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const bentoGrid = document.querySelector('.bento-grid');
   const bentoCards = document.querySelectorAll('.bento-card');
   const backBtn = document.querySelector('.bento-back');
+  // Everything outside the grid that must drop out of the tab order while a card is open
+  const pageChrome = document.querySelectorAll('.bento-header, .contact, .footer');
   let expandedCard = null;
   let isAnimating = false;
-  let savedRect = null; // store the card's grid position when expanding
-  let savedMiniScale = null; // store the miniature scale for zoom-back
   let placeholder = null; // invisible stand-in that holds the card's grid slot while it's expanded
 
   const ZOOM_MS = 650; // must match the transition duration in .bento-card--zooming (bento.css)
@@ -36,17 +36,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const fallback = setTimeout(finish, ZOOM_MS + 100);
   }
 
+  function getRenderWidth(card) {
+    return parseFloat(getComputedStyle(card).getPropertyValue('--content-render-width'));
+  }
+
+  // Collapsed cards act as buttons; their scaled-down content is inert so the
+  // invisible miniature links can't be tabbed to or read out by screen readers.
+  function setCollapsedA11y(card) {
+    const label = card.querySelector('.bento-card__title').textContent.trim();
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', 'Open ' + label);
+    card.removeAttribute('aria-modal');
+    card.querySelector('.bento-card__content').inert = true;
+  }
+
+  function setExpandedA11y(card) {
+    const label = card.querySelector('.bento-card__title').textContent.trim();
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-modal', 'true');
+    card.setAttribute('aria-label', label);
+    card.setAttribute('tabindex', '-1');
+    card.querySelector('.bento-card__content').inert = false;
+  }
+
+  // While a card is open, everything behind it leaves the tab order
+  function setBackgroundInert(activeCard, inert) {
+    bentoCards.forEach(c => { if (c !== activeCard) c.inert = inert; });
+    pageChrome.forEach(el => { el.inert = inert; });
+  }
+
   // Calculate and apply miniature scale for each card
   function updateCardScales() {
     bentoCards.forEach(card => {
       if (card.classList.contains('bento-card--expanded')) return;
-      const cardWidth = card.offsetWidth;
-      const renderWidth = parseFloat(getComputedStyle(card).getPropertyValue('--content-render-width'));
-      const scale = cardWidth / renderWidth;
+      const scale = card.offsetWidth / getRenderWidth(card);
       card.style.setProperty('--card-scale', scale);
     });
   }
 
+  bentoCards.forEach(setCollapsedA11y);
   updateCardScales();
   window.addEventListener('resize', () => {
     if (!expandedCard) updateCardScales();
@@ -57,18 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
     isAnimating = true;
     expandedCard = card;
 
-    // Save card's grid position so we can zoom back to it later
     const rect = card.getBoundingClientRect();
-    savedRect = { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
-
-    const renderWidth = parseFloat(getComputedStyle(card).getPropertyValue('--content-render-width'));
-    savedMiniScale = rect.width / renderWidth;
     // Content is centered at its natural size once expanded (.container caps at --max-width),
     // so never scale it up past 1:1 — only shrink to fit narrower viewports.
-    const fullScale = Math.min(1, window.innerWidth / renderWidth);
+    const fullScale = Math.min(1, window.innerWidth / getRenderWidth(card));
 
     // Lock body scroll
     document.body.style.overflow = 'hidden';
+    setBackgroundInert(card, true);
 
     // Leave an invisible same-sized placeholder in the grid so pulling the card
     // into `position: fixed` doesn't reflow the other cards into its old slot.
@@ -108,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.style.height = '100vh';
     card.style.borderRadius = '0';
     card.style.setProperty('--card-scale', fullScale);
+    card.style.setProperty('--preview-shift', '0px');
 
     // 6. After zoom finishes, swap to expanded state (shows full content)
     afterZoom(card, () => {
@@ -123,9 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
       card.style.borderRadius = '0';
       card.style.zIndex = '1000';
 
+      setExpandedA11y(card);
       backBtn.classList.add('bento-back--visible');
       isAnimating = false;
       card.scrollTop = 0;
+      backBtn.focus({ preventScroll: true });
     });
   }
 
@@ -134,13 +162,21 @@ document.addEventListener('DOMContentLoaded', () => {
     isAnimating = true;
     const card = expandedCard;
 
+    // Let anything living inside the card (e.g. the mini-game) shut itself down
+    card.dispatchEvent(new CustomEvent('bento:collapse'));
+    card.querySelector('.bento-card__content').inert = true;
     backBtn.classList.remove('bento-back--visible');
 
     // Show the rest of the grid behind so you see cards during zoom-out
     bentoGrid.classList.remove('bento-grid--has-expanded');
 
-    const renderWidth = parseFloat(getComputedStyle(card).getPropertyValue('--content-render-width'));
+    const renderWidth = getRenderWidth(card);
     const fullScale = Math.min(1, window.innerWidth / renderWidth);
+
+    // Measure the target from the placeholder now rather than reusing the rect from
+    // expand time, so a window resize while the card was open still lands correctly.
+    const target = placeholder.getBoundingClientRect();
+    const miniScale = target.width / renderWidth;
 
     // 1. Remove expanded, keep card fixed at fullscreen with viewport-scale content
     card.classList.remove('bento-card--expanded');
@@ -161,13 +197,14 @@ document.addEventListener('DOMContentLoaded', () => {
     card.classList.add('bento-card--zooming');
     card.offsetHeight;
 
-    // 4. Animate back to saved grid position AND shrink content to mini scale
-    card.style.top = savedRect.top + 'px';
-    card.style.left = savedRect.left + 'px';
-    card.style.width = savedRect.width + 'px';
-    card.style.height = savedRect.height + 'px';
+    // 4. Animate back to the grid slot AND shrink content to mini scale
+    card.style.top = target.top + 'px';
+    card.style.left = target.left + 'px';
+    card.style.width = target.width + 'px';
+    card.style.height = target.height + 'px';
     card.style.borderRadius = 'var(--border-radius)';
-    card.style.setProperty('--card-scale', savedMiniScale);
+    card.style.setProperty('--card-scale', miniScale);
+    card.style.removeProperty('--preview-shift');
 
     afterZoom(card, () => {
       // Clean up — return card to normal grid flow
@@ -187,11 +224,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       document.body.style.overflow = '';
+      setBackgroundInert(card, false);
+      setCollapsedA11y(card);
       expandedCard = null;
-      savedRect = null;
       isAnimating = false;
 
       updateCardScales();
+      card.focus({ preventScroll: true });
     });
   }
 
@@ -200,6 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (card.classList.contains('bento-card--expanded')) return;
       if (e.target.closest('a')) return;
       expandCard(card);
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.target !== card || card.classList.contains('bento-card--expanded')) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        expandCard(card);
+      }
     });
   });
 
@@ -214,37 +260,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Stop link clicks from expanding card
-  document.querySelectorAll('.bento-card a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-  });
-
   // --- Mini Game ---
   const canvas = document.getElementById('mini-game');
   const startBtn = document.getElementById('game-start');
   if (canvas && startBtn) {
     const ctx = canvas.getContext('2d');
-    const W = 400, H = 300;
+    const W = 400, H = 300; // logical game size; the backing store is scaled for sharp HiDPI rendering
+    const FRAME_MS = 1000 / 60; // all speeds below are tuned in "per 60 fps frame" units
+    const GAME_KEYS = new Set(['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright']);
     let running = false;
+    let rafId = null;
+    let lastTime = 0;
     let player, bullets, enemies, particles, score, spawnTimer, gameOver;
     const keys = {};
 
+    // Pull the palette from the CSS tokens so the game always matches the site theme
+    const rootStyle = getComputedStyle(document.documentElement);
+    const accent = rootStyle.getPropertyValue('--clr-accent').trim();
+    const accent2 = rootStyle.getPropertyValue('--clr-accent-2').trim();
+
     const CLR = {
-      bg: '#080808',
-      grid: 'rgba(255,255,255,0.015)',
+      bg: '#050505',
+      grid: 'rgba(255,255,255,0.025)',
       player: '#ffffff',
-      bullet: '#ffffff',
-      bulletGlow: '#ffffff',
-      enemy: '#555555',
-      enemyEye: '#080808',
-      killParticle: '#aaaaaa',
+      bullet: accent,
+      bulletGlow: accent,
+      enemy: accent2,
+      enemyEye: '#ffffff',
+      killParticle: accent,
       deathParticle: '#ffffff',
       text: '#d4d4d4',
       score: '#ffffff',
       gameover: '#ffffff'
     };
+
+    // Size the canvas backing store to its displayed size × devicePixelRatio, then
+    // draw in logical W×H units. clientWidth ignores the miniature's CSS transform.
+    function resizeCanvas() {
+      const scale = Math.max(1, (canvas.clientWidth || W) * (window.devicePixelRatio || 1) / W);
+      canvas.width = Math.round(W * scale);
+      canvas.height = Math.round(H * scale);
+      ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+    }
 
     function initGame() {
       player = { x: W / 2, y: H / 2, r: 8, speed: 2.5 };
@@ -256,6 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
       gameOver = false;
     }
 
+    function clearKeys() {
+      for (const k in keys) keys[k] = false;
+    }
+
     function getMousePos(e) {
       const rect = canvas.getBoundingClientRect();
       return {
@@ -265,9 +326,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     canvas.addEventListener('click', (e) => {
-      if (!running || gameOver) return;
-      e.preventDefault();
+      if (!running) return;
       e.stopPropagation();
+      if (gameOver) {
+        initGame();
+        return;
+      }
       const m = getMousePos(e);
       const angle = Math.atan2(m.y - player.y, m.x - player.x);
       bullets.push({
@@ -278,8 +342,16 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    document.addEventListener('keydown', (e) => { if (running) keys[e.key.toLowerCase()] = true; });
+    // Only swallow the movement keys, and only mid-game, so they don't scroll the card
+    document.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (!running || !GAME_KEYS.has(k)) return;
+      e.preventDefault();
+      keys[k] = true;
+    });
     document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+    // Releasing a key while the window is unfocused never fires keyup — avoid stuck movement
+    window.addEventListener('blur', clearKeys);
 
     function spawnEnemy() {
       const side = Math.random() * 4 | 0;
@@ -307,29 +379,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    function update() {
-      if (keys['w'] || keys['arrowup']) player.y -= player.speed;
-      if (keys['s'] || keys['arrowdown']) player.y += player.speed;
-      if (keys['a'] || keys['arrowleft']) player.x -= player.speed;
-      if (keys['d'] || keys['arrowright']) player.x += player.speed;
+    // dt = elapsed time in 60 fps frames, so the game plays the same at 60 Hz and 144 Hz
+    function update(dt) {
+      const step = player.speed * dt;
+      if (keys['w'] || keys['arrowup']) player.y -= step;
+      if (keys['s'] || keys['arrowdown']) player.y += step;
+      if (keys['a'] || keys['arrowleft']) player.x -= step;
+      if (keys['d'] || keys['arrowright']) player.x += step;
       player.x = Math.max(player.r, Math.min(W - player.r, player.x));
       player.y = Math.max(player.r, Math.min(H - player.r, player.y));
 
       for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
-        b.x += b.vx; b.y += b.vy; b.life--;
+        b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
         if (b.life <= 0 || b.x < -10 || b.x > W + 10 || b.y < -10 || b.y > H + 10)
           bullets.splice(i, 1);
       }
 
-      spawnTimer++;
+      spawnTimer += dt;
       if (spawnTimer >= 70) { spawnEnemy(); spawnTimer = 0; }
 
       for (let i = enemies.length - 1; i >= 0; i--) {
         const e = enemies[i];
         const angle = Math.atan2(player.y - e.y, player.x - e.x);
-        e.x += Math.cos(angle) * e.speed;
-        e.y += Math.sin(angle) * e.speed;
+        e.x += Math.cos(angle) * e.speed * dt;
+        e.y += Math.sin(angle) * e.speed * dt;
 
         for (let j = bullets.length - 1; j >= 0; j--) {
           const b = bullets[j];
@@ -343,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        if (enemies[i]) {
+        if (enemies[i] === e) {
           const dx = player.x - e.x, dy = player.y - e.y;
           if (dx * dx + dy * dy < (player.r + e.r) * (player.r + e.r)) {
             addParticles(player.x, player.y, CLR.deathParticle, 20);
@@ -352,15 +426,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      const drag = Math.pow(0.96, dt);
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.x += p.vx; p.y += p.vy; p.life--;
-        p.vx *= 0.96; p.vy *= 0.96;
+        p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;
+        p.vx *= drag; p.vy *= drag;
         if (p.life <= 0) particles.splice(i, 1);
       }
     }
 
-    function draw() {
+    function drawBackground() {
       ctx.fillStyle = CLR.bg;
       ctx.fillRect(0, 0, W, H);
 
@@ -368,9 +443,20 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.lineWidth = 1;
       for (let x = 0; x < W; x += 20) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
       for (let y = 0; y < H; y += 20) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    }
+
+    function drawPlayer() {
+      ctx.fillStyle = CLR.player;
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function draw() {
+      drawBackground();
 
       particles.forEach(p => {
-        ctx.globalAlpha = p.life / 35;
+        ctx.globalAlpha = Math.max(0, p.life / 35);
         ctx.fillStyle = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -378,10 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       ctx.globalAlpha = 1;
 
-      ctx.fillStyle = CLR.player;
-      ctx.beginPath();
-      ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
-      ctx.fill();
+      drawPlayer();
 
       ctx.fillStyle = CLR.bullet;
       ctx.shadowColor = CLR.bulletGlow;
@@ -426,18 +509,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    function loop() {
+    function drawIdle() {
+      drawBackground();
+      drawPlayer();
+    }
+
+    function loop(now) {
       if (!running) return;
-      if (!gameOver) update();
+      // Clamp so returning from a background tab doesn't teleport enemies onto the player
+      const dt = Math.min((now - lastTime) / FRAME_MS, 3);
+      lastTime = now;
+      if (!gameOver) update(dt);
       draw();
-      requestAnimationFrame(loop);
+      rafId = requestAnimationFrame(loop);
     }
 
     function startGame() {
       initGame();
+      resizeCanvas();
       startBtn.classList.add('hidden');
       running = true;
-      loop();
+      lastTime = performance.now();
+      rafId = requestAnimationFrame(loop);
+    }
+
+    // Stop the loop when the card closes so it doesn't keep burning CPU in the background
+    function stopGame() {
+      running = false;
+      cancelAnimationFrame(rafId);
+      clearKeys();
+      initGame();
+      drawIdle();
+      startBtn.classList.remove('hidden');
     }
 
     startBtn.addEventListener('click', (e) => {
@@ -445,23 +548,16 @@ document.addEventListener('DOMContentLoaded', () => {
       startGame();
     });
 
-    canvas.addEventListener('click', (e) => {
-      if (gameOver && running) {
-        e.stopPropagation();
-        initGame();
-      }
+    canvas.closest('.bento-card').addEventListener('bento:collapse', stopGame);
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      if (running) draw(); else drawIdle();
     });
 
     // Draw idle state
     initGame();
-    ctx.fillStyle = CLR.bg;
-    ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = CLR.grid;
-    for (let x = 0; x < W; x += 20) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-    for (let y = 0; y < H; y += 20) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-    ctx.fillStyle = CLR.player;
-    ctx.beginPath();
-    ctx.arc(W / 2, H / 2, 8, 0, Math.PI * 2);
-    ctx.fill();
+    resizeCanvas();
+    drawIdle();
   }
 });
