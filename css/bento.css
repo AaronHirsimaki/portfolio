@@ -29,8 +29,9 @@
   pointer-events: none;
 }
 
+/* Header text only slides (no fade) so it's visible, and counted as painted, from the first frame */
 .bento-header > * {
-  animation: rise 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation: slide-up 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 .bento-header > :nth-child(2) { animation-delay: 80ms; }
 .bento-header > :nth-child(3) { animation-delay: 160ms; }
@@ -100,6 +101,10 @@
 
 @keyframes rise {
   from { opacity: 0; transform: translateY(16px); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(12px); }
 }
 
 @keyframes pulse {
@@ -346,7 +351,7 @@
   transition: opacity 300ms ease;
 }
 
-.bento-grid--has-expanded ~ .footer {
+body:has(.bento-grid--has-expanded) .footer {
   display: none;
 }
 

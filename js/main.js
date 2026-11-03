@@ -42,20 +42,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Collapsed cards act as buttons; their scaled-down content is inert so the
   // invisible miniature links can't be tabbed to or read out by screen readers.
+  // Names come from the visible label (title + teaser) so voice-control users can
+  // say what they see; an open card is named by its title alone.
+  function labelIds(card) {
+    const id = card.dataset.card;
+    const title = card.querySelector('.bento-card__title');
+    const teaser = card.querySelector('.bento-card__teaser');
+    title.id = title.id || `card-title-${id}`;
+    if (teaser) teaser.id = teaser.id || `card-teaser-${id}`;
+    return { title: title.id, teaser: teaser && teaser.id };
+  }
+
   function setCollapsedA11y(card) {
-    const label = card.querySelector('.bento-card__title').textContent.trim();
+    const ids = labelIds(card);
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', 'Open ' + label);
+    card.setAttribute('aria-labelledby', ids.teaser ? `${ids.title} ${ids.teaser}` : ids.title);
     card.removeAttribute('aria-modal');
     card.querySelector('.bento-card__content').inert = true;
   }
 
   function setExpandedA11y(card) {
-    const label = card.querySelector('.bento-card__title').textContent.trim();
     card.setAttribute('role', 'dialog');
     card.setAttribute('aria-modal', 'true');
-    card.setAttribute('aria-label', label);
+    card.setAttribute('aria-labelledby', labelIds(card).title);
     card.setAttribute('tabindex', '-1');
     card.querySelector('.bento-card__content').inert = false;
   }
