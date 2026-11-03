@@ -154,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isAnimating = false;
       card.scrollTop = 0;
       backBtn.focus({ preventScroll: true });
+      syncWithHash(); // the URL may have changed mid-animation (e.g. browser Back)
     });
   }
 
@@ -231,34 +232,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
       updateCardScales();
       card.focus({ preventScroll: true });
+      syncWithHash();
     });
   }
+
+  // --- URL hash routing ---
+  // The hash (#projects, #skills…) is the source of truth for which card is open, so the
+  // browser Back button closes a card and an open card can be shared as a link.
+  function cardFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    return id ? document.querySelector(`.bento-card[data-card="${CSS.escape(id)}"]`) : null;
+  }
+
+  function syncWithHash() {
+    if (isAnimating) return; // re-run from the animation's completion callback
+    const target = cardFromHash();
+    if (expandedCard && expandedCard !== target) collapseCard();
+    else if (!expandedCard && target) expandCard(target);
+  }
+
+  function requestOpen(card) {
+    if (expandedCard || isAnimating) return;
+    history.pushState({ bentoCard: card.dataset.card }, '', '#' + card.dataset.card);
+    syncWithHash();
+  }
+
+  function requestClose() {
+    if (history.state && history.state.bentoCard) {
+      history.back(); // popstate → syncWithHash collapses the card
+    } else {
+      // Opened via a shared link: there's no in-page history entry to go back to
+      history.replaceState(null, '', location.pathname + location.search);
+      syncWithHash();
+    }
+  }
+
+  window.addEventListener('popstate', syncWithHash);
 
   bentoCards.forEach(card => {
     card.addEventListener('click', (e) => {
       if (card.classList.contains('bento-card--expanded')) return;
       if (e.target.closest('a')) return;
-      expandCard(card);
+      requestOpen(card);
     });
     card.addEventListener('keydown', (e) => {
       if (e.target !== card || card.classList.contains('bento-card--expanded')) return;
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        expandCard(card);
+        requestOpen(card);
       }
     });
   });
 
   backBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    collapseCard();
+    requestClose();
   });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && expandedCard) {
-      collapseCard();
+      requestClose();
     }
   });
+
+  // Deep link (e.g. /#projects): skip the entrance animation and open that card
+  const linkedCard = cardFromHash();
+  if (linkedCard) {
+    linkedCard.getAnimations().forEach(a => a.finish());
+    syncWithHash();
+  }
 
   // --- Mini Game ---
   const canvas = document.getElementById('mini-game');
@@ -273,6 +315,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastTime = 0;
     let player, bullets, enemies, particles, score, spawnTimer, gameOver;
     const keys = {};
+    let touchTarget = null;     // finger position (game coords) while a touch is held
+    let autoFireTimer = 0;
+    let lastPointerType = 'mouse';
+    const AUTO_FIRE_FRAMES = 18;
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+
+    // Best score survives reloads; storage can throw in private modes, so fail quietly
+    const BEST_KEY = 'catMayhemBest';
+    let best = 0;
+    let isNewBest = false;
+    try { best = Number(localStorage.getItem(BEST_KEY)) || 0; } catch { /* storage unavailable */ }
+    function saveBest() {
+      if (score <= best) return;
+      best = score;
+      isNewBest = true;
+      try { localStorage.setItem(BEST_KEY, String(best)); } catch { /* storage unavailable */ }
+    }
+
+    if (isTouchDevice) {
+      const hint = document.querySelector('.featured__demo-hint');
+      if (hint) hint.textContent = 'Drag to move · auto-fire';
+    }
 
     // Pull the palette from the CSS tokens so the game always matches the site theme
     const rootStyle = getComputedStyle(document.documentElement);
@@ -304,6 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initGame() {
+      isNewBest = false;
       player = { x: W / 2, y: H / 2, r: 8, speed: 2.5 };
       bullets = [];
       enemies = [];
@@ -315,6 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearKeys() {
       for (const k in keys) keys[k] = false;
+      touchTarget = null;
     }
 
     function getMousePos(e) {
@@ -325,22 +391,48 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    canvas.addEventListener('click', (e) => {
-      if (!running) return;
-      e.stopPropagation();
-      if (gameOver) {
-        initGame();
-        return;
-      }
-      const m = getMousePos(e);
-      const angle = Math.atan2(m.y - player.y, m.x - player.x);
+    function shootAt(x, y) {
+      const angle = Math.atan2(y - player.y, x - player.x);
       bullets.push({
         x: player.x, y: player.y,
         vx: Math.cos(angle) * 5,
         vy: Math.sin(angle) * 5,
         life: 80
       });
+    }
+
+    canvas.addEventListener('click', (e) => {
+      if (!running) return;
+      e.stopPropagation();
+      if (lastPointerType === 'touch') return; // touch is handled by the pointer events below
+      if (gameOver) {
+        initGame();
+        return;
+      }
+      const m = getMousePos(e);
+      shootAt(m.x, m.y);
     });
+
+    // Touch: hold and drag to steer the player towards your finger; it auto-fires at
+    // the nearest enemy (aiming and moving with one thumb on a small canvas isn't fun)
+    canvas.addEventListener('pointerdown', (e) => {
+      lastPointerType = e.pointerType;
+      if (e.pointerType !== 'touch' || !running) return;
+      e.preventDefault();
+      if (gameOver) {
+        initGame();
+        return;
+      }
+      touchTarget = getMousePos(e);
+      // Keep receiving moves if the finger slides off the canvas (throws if the pointer is already gone)
+      try { canvas.setPointerCapture(e.pointerId); } catch { /* pointer already released */ }
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (touchTarget && e.pointerType === 'touch') touchTarget = getMousePos(e);
+    });
+    const endTouch = () => { touchTarget = null; };
+    canvas.addEventListener('pointerup', endTouch);
+    canvas.addEventListener('pointercancel', endTouch);
 
     // Only swallow the movement keys, and only mid-game, so they don't scroll the card
     document.addEventListener('keydown', (e) => {
@@ -386,6 +478,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (keys['s'] || keys['arrowdown']) player.y += step;
       if (keys['a'] || keys['arrowleft']) player.x -= step;
       if (keys['d'] || keys['arrowright']) player.x += step;
+      if (touchTarget) {
+        const dx = touchTarget.x - player.x, dy = touchTarget.y - player.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > 2) {
+          const move = Math.min(step, dist);
+          player.x += dx / dist * move;
+          player.y += dy / dist * move;
+        }
+        autoFireTimer += dt;
+        if (autoFireTimer >= AUTO_FIRE_FRAMES && enemies.length) {
+          autoFireTimer = 0;
+          let nearest = enemies[0];
+          for (const e of enemies) {
+            if (Math.hypot(e.x - player.x, e.y - player.y) < Math.hypot(nearest.x - player.x, nearest.y - player.y)) nearest = e;
+          }
+          shootAt(nearest.x, nearest.y);
+        }
+      }
       player.x = Math.max(player.r, Math.min(W - player.r, player.x));
       player.y = Math.max(player.r, Math.min(H - player.r, player.y));
 
@@ -422,6 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (dx * dx + dy * dy < (player.r + e.r) * (player.r + e.r)) {
             addParticles(player.x, player.y, CLR.deathParticle, 20);
             gameOver = true;
+            saveBest();
           }
         }
       }
@@ -492,6 +603,11 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.font = '700 14px "Space Grotesk", system-ui, sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText('Score: ' + score, 10, 22);
+      if (best > 0) {
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#8a8a8a';
+        ctx.fillText('Best: ' + best, W - 10, 22);
+      }
 
       if (gameOver) {
         ctx.fillStyle = 'rgba(8, 8, 8, 0.75)';
@@ -502,10 +618,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillText('Game Over', W / 2, H / 2 - 10);
         ctx.font = '500 14px "Space Grotesk", system-ui, sans-serif';
         ctx.fillStyle = CLR.score;
-        ctx.fillText('Score: ' + score, W / 2, H / 2 + 16);
+        ctx.fillText((isNewBest ? 'New best! ' : '') + 'Score: ' + score, W / 2, H / 2 + 16);
         ctx.fillStyle = '#737373';
         ctx.font = '400 12px "Space Grotesk", system-ui, sans-serif';
-        ctx.fillText('Click to restart', W / 2, H / 2 + 38);
+        ctx.fillText((isTouchDevice ? 'Tap' : 'Click') + ' to restart', W / 2, H / 2 + 38);
       }
     }
 
