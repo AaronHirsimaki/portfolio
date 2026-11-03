@@ -9,9 +9,32 @@ document.addEventListener('DOMContentLoaded', () => {
   let isAnimating = false;
   let savedRect = null; // store the card's grid position when expanding
   let savedMiniScale = null; // store the miniature scale for zoom-back
+  let placeholder = null; // invisible stand-in that holds the card's grid slot while it's expanded
 
-  const EXPAND_MS = 50;
-  const COLLAPSE_MS = 450;
+  const ZOOM_MS = 650; // must match the transition duration in .bento-card--zooming (bento.css)
+
+  // Runs `cb` once the card's zoom transition finishes. Uses transitionend for exact
+  // timing (setTimeout drifts and leaves a dead pause before the finishing DOM swap runs),
+  // with a safety-net timeout in case the event never fires.
+  function afterZoom(card, cb) {
+    if (prefersReducedMotion) {
+      cb();
+      return;
+    }
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      card.removeEventListener('transitionend', onEnd);
+      clearTimeout(fallback);
+      cb();
+    };
+    const onEnd = (e) => {
+      if (e.target === card && e.propertyName === 'width') finish();
+    };
+    card.addEventListener('transitionend', onEnd);
+    const fallback = setTimeout(finish, ZOOM_MS + 100);
+  }
 
   // Calculate and apply miniature scale for each card
   function updateCardScales() {
@@ -29,9 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!expandedCard) updateCardScales();
   });
 
-  const ZOOM_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)';
-  const ZOOM_TRANSITION = `top ${EXPAND_MS}ms ${ZOOM_EASING}, left ${EXPAND_MS}ms ${ZOOM_EASING}, width ${EXPAND_MS}ms ${ZOOM_EASING}, height ${EXPAND_MS}ms ${ZOOM_EASING}, border-radius ${EXPAND_MS}ms ${ZOOM_EASING}`;
-
   function expandCard(card) {
     if (expandedCard || isAnimating) return;
     isAnimating = true;
@@ -43,9 +63,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderWidth = parseFloat(getComputedStyle(card).getPropertyValue('--content-render-width'));
     savedMiniScale = rect.width / renderWidth;
+    // Content is centered at its natural size once expanded (.container caps at --max-width),
+    // so never scale it up past 1:1 — only shrink to fit narrower viewports.
+    const fullScale = Math.min(1, window.innerWidth / renderWidth);
 
     // Lock body scroll
     document.body.style.overflow = 'hidden';
+
+    // Leave an invisible same-sized placeholder in the grid so pulling the card
+    // into `position: fixed` doesn't reflow the other cards into its old slot.
+    placeholder = document.createElement('div');
+    placeholder.className = card.className;
+    placeholder.style.visibility = 'hidden';
+    placeholder.setAttribute('aria-hidden', 'true');
+    card.insertAdjacentElement('afterend', placeholder);
 
     // 1. Pin card at its current position (no transition yet)
     card.style.position = 'fixed';
@@ -64,23 +95,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Force reflow — browser locks in the starting position
     card.offsetHeight;
 
-    // 3. Apply transition inline, then set target values
-    card.style.transition = ZOOM_TRANSITION;
+    // 3. Bring in CSS transitions (card box AND content scale), then set target values
+    card.classList.add('bento-card--zooming');
 
     // 4. Force reflow so transition is registered before target changes
     card.offsetHeight;
 
-    // 5. Set target — this triggers the smooth zoom-in
+    // 5. Set target — this triggers the smooth zoom-in, content scales up with it
     card.style.top = '0';
     card.style.left = '0';
     card.style.width = '100vw';
     card.style.height = '100vh';
     card.style.borderRadius = '0';
+    card.style.setProperty('--card-scale', fullScale);
 
     // 6. After zoom finishes, swap to expanded state (shows full content)
-    const duration = prefersReducedMotion ? 0 : EXPAND_MS;
-    setTimeout(() => {
-      card.style.transition = '';
+    afterZoom(card, () => {
+      card.classList.remove('bento-card--zooming');
       card.style.overflow = '';
       card.style.aspectRatio = '';
       card.classList.add('bento-card--expanded');
@@ -95,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
       backBtn.classList.add('bento-back--visible');
       isAnimating = false;
       card.scrollTop = 0;
-    }, duration);
+    });
   }
 
   function collapseCard() {
@@ -109,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bentoGrid.classList.remove('bento-grid--has-expanded');
 
     const renderWidth = parseFloat(getComputedStyle(card).getPropertyValue('--content-render-width'));
-    const fullScale = window.innerWidth / renderWidth;
+    const fullScale = Math.min(1, window.innerWidth / renderWidth);
 
     // 1. Remove expanded, keep card fixed at fullscreen with viewport-scale content
     card.classList.remove('bento-card--expanded');
@@ -138,8 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.style.borderRadius = 'var(--border-radius)';
     card.style.setProperty('--card-scale', savedMiniScale);
 
-    const duration = prefersReducedMotion ? 0 : COLLAPSE_MS;
-    setTimeout(() => {
+    afterZoom(card, () => {
       // Clean up — return card to normal grid flow
       card.classList.remove('bento-card--zooming');
       card.style.position = '';
@@ -151,13 +181,18 @@ document.addEventListener('DOMContentLoaded', () => {
       card.style.zIndex = '';
       card.style.overflow = '';
 
+      if (placeholder) {
+        placeholder.remove();
+        placeholder = null;
+      }
+
       document.body.style.overflow = '';
       expandedCard = null;
       savedRect = null;
       isAnimating = false;
 
       updateCardScales();
-    }, duration);
+    });
   }
 
   bentoCards.forEach(card => {

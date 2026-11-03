@@ -83,13 +83,15 @@
 /* Content wrapper — scaled down to fit the card */
 .bento-card__content {
   width: var(--content-render-width);
-  transform-origin: top left;
-  /* Scale is set dynamically by JS */
-  transform: scale(var(--card-scale, 0.3));
+  transform-origin: top center;
+  /* Scale is set dynamically by JS. Centered via left:50% + translateX(-50%)
+     so it stays centered at any scale, matching the expanded state once the
+     scaled preview is narrower than the fullscreen card. */
+  transform: translateX(-50%) scale(var(--card-scale, 0.3));
   pointer-events: none;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
 }
 
 /* ===== Zoom transition (applied before values change) ===== */
@@ -134,6 +136,7 @@
 .bento-card.bento-card--expanded .bento-card__content {
   position: relative;
   width: 100%;
+  left: 0;
   transform: none;
   pointer-events: auto;
   padding-top: var(--space-3xl);
@@ -179,7 +182,7 @@
 }
 
 /* Hide other cards only while a card is fully expanded (not during collapse) */
-.bento-grid--has-expanded .bento-card:not(.bento-card--expanded) {
+.bento-grid--has-expanded .bento-card:not(.bento-card--expanded):not(.bento-card--zooming) {
   opacity: 0;
   pointer-events: none;
   transition: opacity 300ms ease;
