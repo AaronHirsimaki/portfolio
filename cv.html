@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CV of Aaron Hirsimäki, Full-Stack Developer in Espoo, Finland.">
+  <title>Aaron Hirsimäki | CV</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <!-- Deliberately plain and single-column: it has to print to a clean PDF and parse well in
+       applicant tracking systems. The retro theme stays on the portfolio itself. -->
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm 16mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #e8e8e8;
+      color: #111;
+      font: 10.5pt/1.4 "Segoe UI", Arial, "Liberation Sans", sans-serif;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .toolbar a,
+    .toolbar button {
+      padding: 6px 14px;
+      border: 1px solid #555;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .page {
+      max-width: 210mm;
+      margin: 0 auto 24px;
+      padding: 14mm 16mm;
+      background: #fff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+    }
+
+    h1 {
+      font-size: 22pt;
+      line-height: 1.1;
+    }
+
+    .role {
+      margin-top: 2px;
+      font-size: 13pt;
+      font-weight: 600;
+    }
+
+    .contact {
+      margin-top: 6px;
+      color: #333;
+    }
+
+    a {
+      color: #004a99;
+    }
+
+    h2 {
+      margin: 14px 0 6px;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #008080;
+      color: #006060;
+      font-size: 11pt;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .entry + .entry {
+      margin-top: 8px;
+    }
+
+    .entry__head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .entry__title {
+      font-weight: 700;
+    }
+
+    .entry__meta {
+      color: #444;
+      white-space: nowrap;
+    }
+
+    .entry__org {
+      color: #333;
+      font-style: italic;
+    }
+
+    ul {
+      margin-top: 2px;
+      padding-left: 16px;
+    }
+
+    .skills p + p {
+      margin-top: 2px;
+    }
+
+    .skills b {
+      display: inline-block;
+      min-width: 92px;
+    }
+
+    @media print {
+      body {
+        background: none;
+      }
+
+      .toolbar {
+        display: none;
+      }
+
+      .page {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .entry {
+        break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="toolbar" aria-label="CV actions">
+    <a href="index.html">← Back to portfolio</a>
+    <button type="button" onclick="print()">Save as PDF / Print</button>
+  </nav>
+
+  <main class="page">
+    <header>
+      <h1>Aaron Hirsimäki</h1>
+      <p class="role">Full-Stack Developer</p>
+      <p class="contact">Espoo, Finland ·
+        <a href="mailto:aaron.hirsimaki@proton.me">aaron.hirsimaki@proton.me</a> ·
+        <a href="https://www.linkedin.com/in/aaron-hirsim%C3%A4ki-848155268">linkedin.com/in/aaron-hirsimäki</a> ·
+        <a href="https://github.com/AaronHirsimaki">github.com/AaronHirsimaki</a> ·
+        <a href="https://aaronhirsimaki.github.io/portfolio/">aaronhirsimaki.github.io/portfolio</a>
+      </p>
+    </header>
+
+    <section>
+      <h2>Profile</h2>
+      <p>Full-stack developer who loves building things and seeing ideas come to life. My strongest languages are
+        Java and Python, React is my frontend of choice, and Lua is what I use for my own games. I solve problems
+        creatively: in Cat Mayhem, my 2D roguelike, I built a collision system that makes a flat world look and
+        feel 3D. In a client
+        project I led deployment with Docker and Kubernetes. I deliver what's planned, on schedule, and I use AI
+        tools to move faster while reviewing everything they produce. Open to software developer roles, available
+        now.</p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      <article class="entry">
+        <div class="entry__head">
+          <p class="entry__title">Backend &amp; Deployment Developer, client software project</p>
+          <p class="entry__meta">8-person team</p>
+        </div>
+        <p class="entry__org">Haaga-Helia University of Applied Sciences, for an external client</p>
+        <ul>
+          <li>Built a web application for a real client; completed with an official work certificate</li>
+          <li>Backend team member on a Python backend behind a React frontend</li>
+          <li>Led deployment: containerised the app with Docker and deployed it on Kubernetes in CSC's Rahti
+            container cloud</li>
+          <li>Weekly meetings with the team and the client; features planned on a Kanban board</li>
+        </ul>
+      </article>
+      <article class="entry">
+        <div class="entry__head">
+          <p class="entry__title">IT Technician (IT-asentaja)</p>
+          <p class="entry__meta">Part-time, gig-based</p>
+        </div>
+        <p class="entry__org">Fujitsu</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      <article class="entry">
+        <p><b>Cat Mayhem</b> (Lua, LÖVE 2D, in development): top-down roguelike with waves of enemies, bosses,
+          loot and upgrades. Custom collision system that gives the 2D world a 3D look and feel.</p>
+      </article>
+      <article class="entry">
+        <p><b>DGMarketplace</b> (Java, Spring Boot, Spring Security, PostgreSQL): disc golf marketplace with
+          access control, JPA repositories, Thymeleaf views and a REST API.</p>
+      </article>
+      <article class="entry">
+        <p><b>StudentApp</b> (React, Vite, Supabase, Leaflet): map-based review platform for bar restrooms in
+          Helsinki, with authentication, user reviews and star ratings.</p>
+      </article>
+      <article class="entry">
+        <p><b>freeGamesApp</b> (React Native, Expo, Firebase): cross-platform mobile app for discovering free
+          games, with Firebase authentication and wishlists.</p>
+      </article>
+    </section>
+
+    <section class="skills">
+      <h2>Technical skills</h2>
+      <p><b>Languages</b> Java, Python, JavaScript, Lua, HTML, CSS, TypeScript (working knowledge)</p>
+      <p><b>Frontend</b> React, React Native, Expo, Vite, React Router</p>
+      <p><b>Backend</b> Spring Boot, Spring Security, REST APIs</p>
+      <p><b>Data</b> PostgreSQL, Supabase, Firebase</p>
+      <p><b>Game dev</b> Lua, LÖVE 2D</p>
+      <p><b>DevOps &amp; tools</b> Docker, Kubernetes, Git, GitHub, Linux</p>
+      <p><b>AI tools</b> Claude Code, Claude, ChatGPT</p>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <article class="entry">
+        <div class="entry__head">
+          <p class="entry__title">Bachelor of Business Administration, Business Information Technology</p>
+          <p class="entry__meta">Expected 2027</p>
+        </div>
+        <p class="entry__org">Haaga-Helia University of Applied Sciences</p>
+        <p>Specialisation in full-stack development; favourite courses were the team-based software project
+          courses.</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Leadership &amp; volunteering</h2>
+      <article class="entry">
+        <div class="entry__head">
+          <p class="entry__title">Event Manager, board of the IT students' association</p>
+          <p class="entry__meta">1 year</p>
+        </div>
+        <p>Planned and organised events for the university's IT students.</p>
+      </article>
+      <article class="entry">
+        <div class="entry__head">
+          <p class="entry__title">Student Tutor, Haaga-Helia</p>
+          <p class="entry__meta">2 years</p>
+        </div>
+        <p>Supported and guided new IT students through the start of their studies.</p>
+      </article>
+      <article class="entry">
+        <div class="entry__head">
+          <p class="entry__title">Volunteer, Assembly</p>
+          <p class="entry__meta">5 years</p>
+        </div>
+        <p>Volunteer at Assembly, one of Finland's largest LAN parties and digital culture events.</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Languages</h2>
+      <p>Finnish (native) · English (fluent)</p>
+    </section>
+  </main>
+</body>
+
+</html>

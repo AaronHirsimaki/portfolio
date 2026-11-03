@@ -1,6 +1,6 @@
 # Aaron Hirsimäki — Portfolio
 
-Personal portfolio of a full-stack software and game developer from Espoo, Finland.
+Personal portfolio of a Full-Stack Developer from Espoo, Finland, open to software developer / engineer roles.
 
 **Live site:** https://aaronhirsimaki.github.io/portfolio/
 
@@ -8,35 +8,36 @@ Personal portfolio of a full-stack software and game developer from Espoo, Finla
 
 ## Highlights
 
-- **Bento grid that zooms open.** Each tile shows a live, scaled-down preview of its section. Clicking one
-  animates it to fullscreen, and the content scales up with the card instead of cutting to a new page.
-- **Playable mini-game.** A small canvas demo of my in-development roguelike *Cat Mayhem* runs right in the
-  Featured tile (WASD to move, click to shoot).
-- **Accessible.** Tiles are keyboard-operable buttons. An open tile behaves as a modal dialog, with focus
-  moved to the Back button, the background made inert and focus restored on close. `prefers-reduced-motion`
-  is respected throughout.
-- **No build step, no framework.** Plain HTML, CSS and JavaScript, under 80 KB of hand-written code.
-- **Fast.** Lighthouse 100 for Performance, Accessibility, Best Practices and SEO on both mobile and desktop.
+- **A retro desktop.** The site is a Windows 95-style desktop: open the icons (or the Start menu) to get
+  floating windows you can drag, resize, minimise to the taskbar, maximise and close. Each window has its
+  own URL (`#projects`, `#skills`…) so it can be shared as a link, and the browser Back button closes the
+  window you just opened.
+- **Playable mini-game.** `CatMayhem.exe` runs a small canvas demo of my in-development roguelike
+  *Cat Mayhem* (WASD to move, click to shoot; drag to move on touch screens).
+- **Retro sounds, zero audio files.** Optional chiptune blips are synthesised with the Web Audio API.
+  Off by default, toggled from the speaker in the taskbar.
+- **Accessible.** Icons, taskbar and Start menu are fully keyboard-operable (arrow keys in the menu, Escape
+  closes the front window), focus moves with the windows, and `prefers-reduced-motion` is respected.
+- **No build step, no framework.** Plain HTML, CSS and JavaScript. Pixel-art icons are hand-made inline SVG,
+  and the UI uses system fonts, so there are no web fonts to download.
 
 ## Tech
 
 | Area | Details |
 | --- | --- |
-| Markup | Semantic HTML, Open Graph / Twitter card meta |
-| Styling | CSS custom properties (one-line re-theming via `--clr-accent`), BEM naming, CSS Grid |
-| Behaviour | Vanilla JS: FLIP-style zoom animation, `inert` focus management, delta-time canvas game loop with HiDPI scaling |
-| Icons / fonts | [Devicon](https://devicon.dev/) (pinned, loaded without blocking render); Inter + Space Grotesk self-hosted as preloaded variable WOFF2 |
+| Markup | Semantic HTML, Open Graph / Twitter card meta, one inline SVG sprite for all icons |
+| Styling | CSS custom properties for the palette and the four bevel styles, BEM naming, CSS Grid |
+| Behaviour | Vanilla JS window manager (z-order, drag, minimise/maximise, taskbar), hash routing with History API Back/Forward, Web Audio sounds, delta-time canvas game loop with HiDPI scaling |
+| Icons | Pixel-art SVG sprite; [Devicon](https://devicon.dev/) for skill logos (pinned, loaded without blocking render) |
 | Hosting | GitHub Pages |
 
 ## Project structure
 
 ```
-index.html        Page markup: header, bento cards, contact
-css/fonts.css     Self-hosted @font-face rules
-css/style.css     Design tokens and section/component styles
-css/bento.css     Bento grid, card zoom states, hero header
-js/main.js        Card zoom + accessibility, Cat Mayhem mini-game
-assets/           Favicons, fonts (+ OFL licences), social preview image, project screenshots
+index.html        Desktop, windows, taskbar and Start menu markup + icon sprite
+css/style.css     Retro theme: palette, bevels, windows, taskbar, responsive layout
+js/main.js        Window manager, Start menu, clock, sounds, Cat Mayhem mini-game
+assets/           Favicons, social preview image, project screenshots
 ```
 
 ## Running locally
