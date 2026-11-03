@@ -354,18 +354,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const accent2 = rootStyle.getPropertyValue('--clr-accent-2').trim();
 
     const CLR = {
-      bg: '#050505',
-      grid: 'rgba(255,255,255,0.025)',
-      player: '#ffffff',
+      bg: '#01111f',
+      grid: 'rgba(0,180,216,0.07)',
+      player: '#f0fbff',
       bullet: accent,
       bulletGlow: accent,
       enemy: accent2,
-      enemyEye: '#ffffff',
+      enemyEye: '#01111f',
       killParticle: accent,
-      deathParticle: '#ffffff',
-      text: '#d4d4d4',
-      score: '#ffffff',
-      gameover: '#ffffff'
+      deathParticle: '#f0fbff',
+      text: '#caf0f8',
+      score: '#f0fbff',
+      gameover: '#f0fbff'
     };
 
     // Size the canvas backing store to its displayed size × devicePixelRatio, then
@@ -615,12 +615,12 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillText('Score: ' + score, 10, 22);
       if (best > 0) {
         ctx.textAlign = 'right';
-        ctx.fillStyle = '#8a8a8a';
+        ctx.fillStyle = '#90e0ef';
         ctx.fillText('Best: ' + best, W - 10, 22);
       }
 
       if (gameOver) {
-        ctx.fillStyle = 'rgba(8, 8, 8, 0.75)';
+        ctx.fillStyle = 'rgba(1, 17, 31, 0.8)';
         ctx.fillRect(0, 0, W, H);
         ctx.fillStyle = CLR.gameover;
         ctx.font = '700 26px "Space Grotesk", system-ui, sans-serif';
@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.font = '500 14px "Space Grotesk", system-ui, sans-serif';
         ctx.fillStyle = CLR.score;
         ctx.fillText((isNewBest ? 'New best! ' : '') + 'Score: ' + score, W / 2, H / 2 + 16);
-        ctx.fillStyle = '#737373';
+        ctx.fillStyle = '#90e0ef';
         ctx.font = '400 12px "Space Grotesk", system-ui, sans-serif';
         ctx.fillText((isTouchDevice ? 'Tap' : 'Click') + ' to restart', W / 2, H / 2 + 38);
       }

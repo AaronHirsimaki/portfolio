@@ -1,20 +1,26 @@
 /* ===== Design Tokens ===== */
 :root {
-  /* Palette: #000000 · #3A3A3A · #FFFFFF · #6A1B9A · #FF4081 */
-  --clr-bg: #000000;
-  --clr-bg-card: #0f0f0f;
-  --clr-text: #d4d4d4;
-  --clr-text-muted: #8a8a8a;
-  --clr-heading: #ffffff;
-  --clr-border: #3a3a3a;
-  --clr-border-subtle: #242424;
+  /* Palette: #0077B6 ocean · #00B4D8 cyan · #90E0EF light cyan · #EE6C4D coral, on deep ocean navy */
+  --clr-bg: #021a2e;
+  --clr-bg-card: #06294a;
+  --clr-bg-sunken: #01111f;    /* inset areas, e.g. the game canvas */
+  --clr-text: #caf0f8;         /* 12:1 on cards */
+  --clr-text-muted: #90e0ef;   /* 9.9:1 on cards */
+  --clr-heading: #f0fbff;
+  --clr-border: #0b4a75;
+  --clr-border-subtle: #093a5e;
 
-  /* Pink is the interactive/text accent; purple is decorative only (too dark for text on black) */
-  --clr-accent: #ff4081;
-  --clr-accent-2: #6a1b9a;
-  --clr-accent-glow: rgba(255, 64, 129, 0.35);
-  --clr-accent-glow-soft: rgba(255, 64, 129, 0.12);
-  --gradient-accent: linear-gradient(90deg, var(--clr-accent-2), var(--clr-accent));
+  /* Coral = actions (buttons, links, hover); 4.8:1+ on every surface, so it's safe for small text too.
+     Cyan = labels, highlights and decoration. #0077B6 is only 3:1, so it's used for glows, never text. */
+  --clr-accent: #ee6c4d;
+  --clr-accent-text: #ee6c4d;
+  --clr-on-accent: #021a2e;
+  --clr-accent-2: #00b4d8;
+  --clr-ocean: #0077b6;
+  --clr-accent-glow: rgba(238, 108, 77, 0.35);
+  --clr-accent-glow-soft: rgba(238, 108, 77, 0.14);
+  /* Decorative bars stay in the blue family; blending blue into coral (its complement) goes muddy */
+  --gradient-accent: linear-gradient(90deg, var(--clr-ocean), var(--clr-accent-2), #90e0ef);
 
   --ff-body: 'Inter', system-ui, -apple-system, sans-serif;
   --ff-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
@@ -64,7 +70,7 @@ body {
 
 ::selection {
   background: var(--clr-accent);
-  color: #000000;
+  color: var(--clr-on-accent);
 }
 
 /* ===== Floating Clouds Background ===== */
@@ -81,13 +87,13 @@ body {
 
 .cloud {
   position: absolute;
-  background: radial-gradient(ellipse at center, rgba(106, 27, 154, 0.22) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(0, 119, 182, 0.40) 0%, transparent 70%);
   border-radius: 50%;
   animation: cloud-drift linear infinite;
 }
 
 .cloud:nth-child(even) {
-  background: radial-gradient(ellipse at center, rgba(255, 64, 129, 0.10) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(0, 180, 216, 0.10) 0%, transparent 70%);
 }
 
 .cloud:nth-child(1) { width: 500px; height: 200px; top: 8%;  left: -10%; animation-duration: 80s; }
@@ -163,7 +169,7 @@ ul { list-style: none; }
 
 .btn--primary {
   background: var(--clr-accent);
-  color: #000000;
+  color: var(--clr-on-accent);
   box-shadow: 0 4px 24px var(--clr-accent-glow-soft);
 }
 
@@ -174,12 +180,12 @@ ul { list-style: none; }
 .btn--ghost {
   color: var(--clr-heading);
   border-color: var(--clr-border);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(202, 240, 248, 0.03);
 }
 
 .btn--ghost:hover {
   border-color: var(--clr-accent);
-  color: var(--clr-accent);
+  color: var(--clr-accent-text);
 }
 
 /* ===== About ===== */
@@ -199,7 +205,7 @@ ul { list-style: none; }
   width: 200px;
   height: 200px;
   border-radius: var(--border-radius);
-  background: linear-gradient(135deg, var(--clr-accent-2), var(--clr-accent));
+  background: linear-gradient(135deg, #023e8a, var(--clr-ocean) 55%, var(--clr-accent-2));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -208,7 +214,7 @@ ul { list-style: none; }
   font-weight: 700;
   color: var(--clr-heading);
   position: relative;
-  border: 3px solid rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(202, 240, 248, 0.15);
   box-shadow: 0 12px 48px var(--clr-accent-glow-soft);
   transition: transform var(--transition-bounce), border-color var(--transition-base);
   cursor: default;
@@ -216,7 +222,7 @@ ul { list-style: none; }
 
 .about__placeholder:hover {
   transform: rotate(-3deg) scale(1.05);
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(202, 240, 248, 0.5);
 }
 
 .about__text {
@@ -265,7 +271,7 @@ ul { list-style: none; }
   bottom: 0;
   left: 0;
   width: 4px;
-  background: linear-gradient(to bottom, var(--clr-accent-2), var(--clr-accent));
+  background: linear-gradient(to bottom, #90e0ef, var(--clr-accent-2));
 }
 
 .journey-card__kicker {
@@ -274,7 +280,7 @@ ul { list-style: none; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--clr-accent);
+  color: var(--clr-accent-2);
   margin-bottom: var(--space-xs);
 }
 
@@ -359,7 +365,7 @@ ul { list-style: none; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--clr-accent);
+  color: var(--clr-accent-2);
 }
 
 .project-card__title {
@@ -417,7 +423,7 @@ ul { list-style: none; }
   border-radius: 9999px;
   border: 1px solid var(--clr-border);
   color: var(--clr-text);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(202, 240, 248, 0.04);
 }
 
 .project-card__links {
@@ -435,7 +441,7 @@ ul { list-style: none; }
 }
 
 .project-card__link:hover {
-  color: var(--clr-accent);
+  color: var(--clr-accent-text);
 }
 
 /* ===== Featured Project ===== */
@@ -462,7 +468,7 @@ ul { list-style: none; }
 .featured__badge {
   display: inline-block;
   background: var(--clr-accent);
-  color: #000000;
+  color: var(--clr-on-accent);
   font-family: var(--ff-display);
   font-size: var(--fs-xs);
   font-weight: 700;
@@ -492,7 +498,7 @@ ul { list-style: none; }
 
 .featured__subtitle {
   font-size: var(--fs-md);
-  color: var(--clr-accent);
+  color: var(--clr-accent-text);
   font-weight: 500;
   margin-bottom: var(--space-md);
 }
@@ -511,7 +517,7 @@ ul { list-style: none; }
 }
 
 .featured__demo {
-  background: #050505;
+  background: var(--clr-bg-sunken);
   border: 2px solid var(--clr-border);
   border-radius: var(--border-radius);
   overflow: hidden;
@@ -525,14 +531,14 @@ ul { list-style: none; }
   gap: var(--space-sm);
   padding: var(--space-xs) var(--space-md);
   border-bottom: 1px solid var(--clr-border);
-  background: rgba(15, 15, 15, 0.9);
+  background: rgba(1, 17, 31, 0.9);
 }
 
 .featured__demo-title {
   font-family: var(--ff-display);
   font-size: var(--fs-xs);
   font-weight: 700;
-  color: var(--clr-accent);
+  color: var(--clr-accent-text);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
@@ -559,7 +565,7 @@ ul { list-style: none; }
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--clr-accent);
-  color: #000000;
+  color: var(--clr-on-accent);
   border: none;
   padding: 0.7rem 2.2rem;
   border-radius: var(--border-radius-sm);
@@ -644,7 +650,7 @@ ul { list-style: none; }
 .skill-group .skill-group__title { color: var(--clr-heading); }
 
 .skill-group .skill-badge {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(202, 240, 248, 0.05);
   color: var(--clr-text);
   border-color: var(--clr-border-subtle);
 }

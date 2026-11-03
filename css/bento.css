@@ -23,7 +23,7 @@
   content: '';
   position: absolute;
   inset: -10% 15% 20%;
-  background: radial-gradient(ellipse at center, rgba(106, 27, 154, 0.35), rgba(255, 64, 129, 0.08) 45%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(0, 119, 182, 0.55), rgba(0, 180, 216, 0.16) 50%, transparent 70%);
   filter: blur(40px);
   z-index: -1;
   pointer-events: none;
@@ -46,7 +46,7 @@
   margin-bottom: var(--space-lg);
   border: 1px solid var(--clr-border);
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(202, 240, 248, 0.05);
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--clr-text);
@@ -69,7 +69,7 @@
   letter-spacing: -0.02em;
   margin-bottom: var(--space-sm);
   color: var(--clr-heading);
-  background: linear-gradient(90deg, #ffffff 35%, var(--clr-accent));
+  background: linear-gradient(90deg, var(--clr-heading) 35%, var(--clr-accent));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -108,8 +108,8 @@
 }
 
 @keyframes pulse {
-  70%  { box-shadow: 0 0 0 8px rgba(255, 64, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0); }
+  70%  { box-shadow: 0 0 0 8px rgba(238, 108, 77, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(238, 108, 77, 0); }
 }
 
 /* ===== Grid =====
@@ -189,7 +189,7 @@
   justify-content: space-between;
   gap: var(--space-sm);
   padding: var(--space-2xl) var(--space-md) var(--space-md);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.97) 35%, transparent);
+  background: linear-gradient(to top, rgba(2, 26, 46, 0.97) 35%, transparent);
   pointer-events: none;
 }
 
@@ -227,7 +227,7 @@
   border-radius: 50%;
   border: 1px solid var(--clr-border);
   color: var(--clr-heading);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(1, 17, 31, 0.7);
   transition: background 250ms ease, color 250ms ease, border-color 250ms ease, transform 250ms ease;
 }
 
@@ -235,7 +235,7 @@
 .bento-card:focus-visible .bento-card__arrow {
   background: var(--clr-accent);
   border-color: var(--clr-accent);
-  color: #000000;
+  color: var(--clr-on-accent);
   transform: rotate(45deg);
 }
 
@@ -317,7 +317,7 @@
   top: var(--space-lg);
   left: var(--space-lg);
   z-index: 1100;
-  background: rgba(15, 15, 15, 0.9);
+  background: rgba(1, 17, 31, 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--clr-border);
@@ -335,7 +335,7 @@
 }
 
 .bento-back:hover {
-  background: rgba(30, 30, 30, 0.95);
+  background: rgba(6, 41, 74, 0.95);
   border-color: var(--clr-accent);
 }
 
