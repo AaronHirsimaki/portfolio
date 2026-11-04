@@ -97,7 +97,7 @@
         d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
     </symbol>
     <symbol id="i-linkedin" viewBox="0 0 24 24">
-      <path fill="#0a66c2"
+      <path fill="var(--icon-fill, #0a66c2)"
         d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     </symbol>
     <symbol id="i-start" viewBox="0 0 32 32" shape-rendering="crispEdges">
@@ -162,10 +162,10 @@
       <div class="window__body">
         <div class="welcome">
           <div class="welcome__main">
-            <p class="welcome__kicker">Welcome to the desktop of</p>
+            <p class="welcome__kicker">Welcome to the portfolio of</p>
             <p class="welcome__name">Aaron Hirsimäki</p>
             <p class="welcome__tagline">Full-Stack Developer</p>
-            <p class="welcome__stack">Java · Python · React · Lua · Docker</p>
+            <p class="welcome__stack">Java · Python · React · Lua</p>
             <p class="welcome__status"><span class="status-dot" aria-hidden="true"></span> Open to software developer
               / engineer roles · <strong>Available now</strong></p>
             <ul class="welcome__facts">
@@ -175,12 +175,18 @@
             </ul>
           </div>
           <div class="welcome__actions">
-            <a href="cv.html" target="_blank" class="btn btn--default">View CV</a>
-            <a href="mailto:aaron.hirsimaki@proton.me" class="btn">Email me</a>
-            <a href="#projects" class="btn" data-open="projects">Projects</a>
-            <a href="https://github.com/AaronHirsimaki" target="_blank" rel="noopener noreferrer" class="btn">GitHub</a>
+            <a href="assets/Aaron-Hirsimaki-CV.pdf" download class="btn btn--default btn--tint btn--cv"><svg
+                class="btn__icon" aria-hidden="true"><use href="#i-doc" /></svg> Download CV</a>
+            <a href="mailto:aaron.hirsimaki@proton.me" class="btn btn--tint btn--mail"><svg class="btn__icon"
+                aria-hidden="true"><use href="#i-mail" /></svg> Email me</a>
+            <a href="#projects" class="btn btn--tint btn--projects" data-open="projects"><svg class="btn__icon"
+                aria-hidden="true"><use href="#i-folder" /></svg> Projects</a>
+            <a href="https://github.com/AaronHirsimaki" target="_blank" rel="noopener noreferrer"
+              class="btn btn--tint btn--github"><svg class="btn__icon" aria-hidden="true"><use href="#i-github" /></svg>
+              GitHub</a>
             <a href="https://www.linkedin.com/in/aaron-hirsim%C3%A4ki-848155268" target="_blank"
-              rel="noopener noreferrer" class="btn">LinkedIn</a>
+              rel="noopener noreferrer" class="btn btn--tint btn--linkedin"><svg class="btn__icon"
+                aria-hidden="true"><use href="#i-linkedin" /></svg> LinkedIn</a>
           </div>
         </div>
 
@@ -212,20 +218,31 @@
       <div class="window__body window__body--flush">
         <div class="notepad field">
           <div class="about__grid">
-            <div class="about__photo" aria-hidden="true">AH</div>
+            <div class="about__photo" aria-hidden="true">
+              <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <rect width="100" height="100" fill="#dfe3ee" />
+                <ellipse cx="50" cy="38" rx="16" ry="18" fill="#8b9dc3" />
+                <path fill="#8b9dc3" d="M32 62H68C78 62 85 68 85 76V100H15V76C15 68 22 62 32 62Z" />
+              </svg>
+            </div>
             <div class="about__text">
-              <p>I've used computers my whole life, so building software was the natural path for me. I've also
-                played games for as long as I can remember, and once I had the skills I started making my own.</p>
-              <p>I enjoy programming of all kinds, frontend and backend alike. What motivates me most is the creative
-                part: building something and seeing how it turns out. My strongest languages are Java and
-                Python, React is my frontend of choice, and Lua is what I use for games. The project I'm proudest of
-                is the collision system in Cat Mayhem, which makes a flat 2D world look and feel 3D. It took a while
-                to crack, and it was worth it.</p>
-              <p>I'm good at figuring things out and finding creative solutions. I get things done as planned, so
-                nobody has to rethink schedules because of me, and I take pride in everything I start.</p>
-              <p>AI is one of my tools. I use Claude Code, Claude and ChatGPT to bring ideas to life faster and to
-                find the right approach and tools for what I'm building. I review everything they produce, making
-                sure the code works and that nothing in it is unnecessary or unclear to me.</p>
+              <p>Hi there,</p>
+              <p>I'm Aaron, a full-stack developer from Espoo. I've been on computers for as long as I can remember,
+                and I've played games for just as long. At some point playing them wasn't enough, so I started making
+                my own.</p>
+              <p>I enjoy building all kinds of software, frontend and backend alike. Java and Python are my strongest
+                languages, React is my frontend of choice, and Lua is what I use for games. The thing I'm proudest of
+                is the collision system in Cat Mayhem, my top-down roguelike. It makes a flat 2D world look and feel
+                3D. It took a while to crack, and it was worth every attempt.</p>
+              <p>I've also done this for real. In a client project at Haaga-Helia, I was one of eight developers
+                building a web app for an actual client. I took the lead on deployment, containerising the app with
+                Docker and running it on Kubernetes. I use AI tools like Claude Code to move faster, but I read
+                everything they write. If I don't understand a line, it doesn't ship.</p>
+              <p>Outside of code, I've been on the live crew at Assembly since 2021, and I spend more time than I'd
+                like to admit tinkering with my Linux setup.</p>
+              <p>Right now I'm looking for a Full-Stack Developer role. I'm available right away and happy to work in
+                Finnish or English. If that sounds like a fit, <a href="#contact" data-open="contact">say hi</a>.</p>
+              <p>Thanks for reading,<br>Aaron</p>
             </div>
           </div>
 
@@ -253,19 +270,27 @@
             <article class="groupbox">
               <p class="groupbox__legend">Work experience</p>
               <h4 class="journey__title">IT Technician (IT-asentaja), Fujitsu</h4>
-              <p class="journey__meta">Part-time, gig-based</p>
+              <p class="journey__meta">Part-time, on-call gigs · 2024 – present</p>
+              <ul class="bullets">
+                <li>Installing and removing workstations at Fujitsu's customer sites</li>
+                <li>Setting up halls for the Finnish matriculation exams: installing equipment, cabling and testing
+                  connections</li>
+              </ul>
             </article>
             <article class="groupbox">
               <p class="groupbox__legend">Leadership &amp; volunteering</p>
-              <h4 class="journey__title">Event Manager, IT students' association board</h4>
-              <p class="journey__meta">1 year</p>
-              <p>Planned and organised events for the university's IT students.</p>
+              <h4 class="journey__title">Event Manager, Atkins ry board</h4>
+              <p class="journey__meta">2025</p>
+              <p>Planned and organised events for Haaga-Helia's IT students as a board member of Atkins ry, the IT
+                students' association.</p>
               <h4 class="journey__title journey__title--next">Student Tutor, Haaga-Helia</h4>
-              <p class="journey__meta">2 years</p>
+              <p class="journey__meta">2024 – 2025</p>
               <p>Supported and guided new IT students through the start of their studies.</p>
-              <h4 class="journey__title journey__title--next">Volunteer, Assembly</h4>
-              <p class="journey__meta">5 years</p>
-              <p>Volunteering at Assembly, one of Finland's largest LAN parties and digital culture events.</p>
+              <h4 class="journey__title journey__title--next">Live Crew, Assembly</h4>
+              <p class="journey__meta">2021 – present</p>
+              <p>Volunteer on the live production crew of Assembly, one of Finland's largest LAN parties and digital
+                culture events: setting up, running and tearing down the live tech before, during and after the
+                event.</p>
             </article>
             <article class="groupbox">
               <p class="groupbox__legend">Education</p>
@@ -274,8 +299,8 @@
                 2027</p>
               <p>Specialised in full-stack development, covering frontend, backend and mobile, alongside the
                 business side of IT. My favourite courses were the software project courses, where we built software
-                together in teams. Outside the classroom I've been a student tutor and an event manager on the IT
-                students' association board.</p>
+                together in teams. Outside the classroom I've been a student tutor and an event manager on the board of Atkins ry,
+                the IT students' association.</p>
             </article>
           </div>
         </div>
@@ -551,19 +576,19 @@
           <p class="contact__intro"><span class="status-dot" aria-hidden="true"></span> I'm currently open to new
             opportunities. Feel free to reach out!</p>
           <ul class="contact__links">
-            <li><a href="mailto:aaron.hirsimaki@proton.me" class="contact-link btn">
+            <li><a href="mailto:aaron.hirsimaki@proton.me" class="contact-link btn btn--tint btn--mail">
                 <svg class="contact-link__icon" aria-hidden="true"><use href="#i-mail" /></svg>
                 <span class="contact-link__label">Email</span>
                 <span class="contact-link__value">aaron.hirsimaki@proton.me</span>
               </a></li>
             <li><a href="https://www.linkedin.com/in/aaron-hirsim%C3%A4ki-848155268" target="_blank"
-                rel="noopener noreferrer" class="contact-link btn">
+                rel="noopener noreferrer" class="contact-link btn btn--tint btn--linkedin">
                 <svg class="contact-link__icon" aria-hidden="true"><use href="#i-linkedin" /></svg>
                 <span class="contact-link__label">LinkedIn</span>
                 <span class="contact-link__value">Aaron Hirsimäki</span>
               </a></li>
             <li><a href="https://github.com/AaronHirsimaki" target="_blank" rel="noopener noreferrer"
-                class="contact-link btn">
+                class="contact-link btn btn--tint btn--github">
                 <svg class="contact-link__icon" aria-hidden="true"><use href="#i-github" /></svg>
                 <span class="contact-link__label">GitHub</span>
                 <span class="contact-link__value">AaronHirsimaki</span>

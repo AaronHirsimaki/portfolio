@@ -131,6 +131,46 @@ img {
   height: 16px;
 }
 
+/* Coloured button: same 2px bevel, but the edges are tinted from --face */
+.btn--tint {
+  --tint-hi: color-mix(in srgb, var(--face), #fff 55%);
+  --tint-lo: color-mix(in srgb, var(--face), #fff 25%);
+  --tint-sh: color-mix(in srgb, var(--face), #000 45%);
+  justify-content: flex-start;
+  white-space: nowrap;
+  background: var(--face);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: inset -1px -1px var(--clr-dark), inset 1px 1px var(--tint-hi),
+    inset -2px -2px var(--tint-sh), inset 2px 2px var(--tint-lo);
+}
+
+.btn--tint:active {
+  box-shadow: inset -1px -1px var(--tint-hi), inset 1px 1px var(--clr-dark),
+    inset -2px -2px var(--tint-lo), inset 2px 2px var(--tint-sh);
+}
+
+.btn--tint:hover {
+  background: color-mix(in srgb, var(--face), #fff 12%);
+}
+
+.btn--tint:focus-visible {
+  outline: 1px dotted #fff;
+}
+
+.btn--tint.btn--default:focus-visible {
+  outline: 1px solid var(--clr-dark);
+  box-shadow: inset -1px -1px var(--clr-dark), inset 1px 1px var(--tint-hi),
+    inset -2px -2px var(--tint-sh), inset 2px 2px var(--tint-lo), inset 0 0 0 4px var(--face),
+    inset 0 0 0 5px #fff;
+}
+
+.btn--cv { --face: #008000; }
+.btn--mail { --face: #800080; }
+.btn--projects { --face: #806000; }
+.btn--github { --face: #24292f; }
+.btn--linkedin { --face: #0a66c2; --icon-fill: #fff; }
+
 .field {
   background: var(--clr-field);
   box-shadow: var(--bevel-sunken);
@@ -540,6 +580,10 @@ html:not(.js) .taskbar__sound {
   margin-top: 12px;
 }
 
+.welcome__status strong {
+  color: #005a00; /* 4.7:1 on face grey */
+}
+
 .welcome__facts {
   display: flex;
   flex-wrap: wrap;
@@ -560,7 +604,7 @@ html:not(.js) .taskbar__sound {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 130px;
+  width: 170px;
 }
 
 .welcome__highlights {
@@ -598,10 +642,8 @@ html:not(.js) .taskbar__sound {
   place-items: center;
   width: 120px;
   height: 120px;
-  background: var(--clr-desktop);
+  padding: 2px;
   box-shadow: var(--bevel-sunken);
-  color: #fff;
-  font: 700 40px "Arial Black", var(--font-ui);
 }
 
 .about__text p + p {
@@ -851,6 +893,7 @@ html:not(.js) .taskbar__sound {
   justify-content: stretch;
   padding: 8px 12px;
   text-align: left;
+  white-space: normal;
 }
 
 .contact-link.btn:active {
@@ -870,6 +913,7 @@ html:not(.js) .taskbar__sound {
 .contact-link__value {
   overflow-wrap: anywhere;
   font-size: 13px;
+  font-weight: 400;
 }
 
 /* --- Taskbar -------------------------------------------------------------- */
@@ -1133,7 +1177,6 @@ html:not(.js) .taskbar__sound {
   .about__photo {
     width: 80px;
     height: 80px;
-    font-size: 28px;
   }
 
   .skills {
