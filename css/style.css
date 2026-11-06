@@ -619,10 +619,24 @@ html:not(.js) .taskbar__sound {
   margin-top: 6px;
 }
 
-.welcome__hint {
-  margin-top: 14px;
-  color: var(--clr-text-muted);
-  font-size: 13px;
+/* Windows-tooltip yellow so the "explore the desktop" tip can't be missed */
+.welcome__tip {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 10px 14px;
+  border: 1px solid #000;
+  background: #ffffe1;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, .35);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.welcome__tip-icon {
+  flex: none;
+  width: 32px;
+  height: 32px;
 }
 
 /* --- About (Notepad) ------------------------------------------------------ */
@@ -701,13 +715,6 @@ html:not(.js) .taskbar__sound {
   grid-column: 1 / -1;
 }
 
-.project--wide {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
 .project__image {
   box-shadow: var(--bevel-sunken);
   padding: 2px;
@@ -716,7 +723,7 @@ html:not(.js) .taskbar__sound {
 
 .project__gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 8px;
   margin-top: 12px;
 }
@@ -914,6 +921,195 @@ html:not(.js) .taskbar__sound {
   overflow-wrap: anywhere;
   font-size: 13px;
   font-weight: 400;
+}
+
+/* --- Terminal ------------------------------------------------------------- */
+.term {
+  flex: 1 1 auto;
+  height: 27em; /* starting height (fits the roguelike map); shrinks to fit short screens and grows when the window is resized */
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 6px 8px;
+  background: #0c0c0c;
+  box-shadow: var(--bevel-sunken);
+  color: #c8c8c8;
+  font: 14px/1.4 ui-monospace, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+  cursor: text;
+}
+
+.term ::selection {
+  background: #c8c8c8;
+  color: #0c0c0c;
+}
+
+.term__row {
+  min-height: 1.4em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.term__line {
+  display: flex;
+}
+
+.term__prompt {
+  flex: none;
+  white-space: pre;
+}
+
+.term__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  caret-color: #55ff55;
+  caret-shape: block;
+}
+
+.term a {
+  color: #55ffff;
+}
+
+.term .term__run {
+  color: inherit;
+  text-decoration: none;
+}
+
+.term .term__run:hover {
+  text-decoration: underline;
+}
+
+.term .term__user,
+.term .term__ok { color: #55ff55; }
+.term .term__user,
+.term .term__path,
+.term .term__dir,
+.term .term__b { font-weight: 700; }
+.term .term__path,
+.term .term__dir { color: #6b9bff; }
+.term .term__bin { color: #ff79ff; }
+.term .term__b { color: #fff; }
+.term .term__h { color: #ffff55; }
+.term .term__dim { color: #8a8a8a; }
+.term .term__err { color: #ff6b6b; }
+.term .term__tux { color: #fff; }
+
+.term__swatch { display: inline-block; }
+.term__bg0 { background: #000; }
+.term__bg1 { background: #aa0000; }
+.term__bg2 { background: #00aa00; }
+.term__bg3 { background: #aa5500; }
+.term__bg4 { background: #0000aa; }
+.term__bg5 { background: #aa00aa; }
+.term__bg6 { background: #00aaaa; }
+.term__bg7 { background: #aaaaaa; }
+
+.term .term__exec { color: #55ff55; font-weight: 700; }
+
+.term__quick {
+  flex-wrap: wrap;
+}
+
+/* The prompt and quick commands step aside while the game has the screen */
+.term__line[hidden],
+.term__quick[hidden] {
+  display: none;
+}
+
+/* Cat Mayhem, roguelike edition (js/catmayhem-rogue.js) */
+.rg {
+  font-size: 13px;
+  line-height: 1.2;
+  outline: none;
+}
+
+.rg__title {
+  color: #fff;
+  font-weight: 700;
+}
+
+.rg__msg {
+  min-height: 2.4em; /* room for two lines, so the map doesn't jump when messages wrap */
+  color: #fff;
+}
+
+.rg__map {
+  margin: 2px 0;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.rg__status {
+  white-space: pre-wrap;
+}
+
+.rg__help {
+  margin-top: 2px;
+}
+
+.rg-dim { color: #8a8a8a; }
+.rg-wall { color: #8a8a8a; }
+.rg-floor { color: #6f5383; }
+.rg-grass { color: #8a6aa0; }
+.rg-bush { color: #b47ec8; }
+.rg-rock { color: #a8a3ae; }
+.rg-cat { color: #fff; font-weight: 700; }
+.rg-dead { color: #ff6b6b; font-weight: 700; }
+.rg-mouse { color: #c9c4cf; }
+.rg-big { color: #ff9ec8; font-weight: 700; }
+.rg-hurt { color: #ff6b6b; font-weight: 700; }
+.rg-corpse { color: #b0202c; }
+.rg-nip { color: #55ff55; font-weight: 700; }
+.rg-shot { color: #ffe14d; font-weight: 700; }
+.rg-hp { color: #ff6b6b; }
+
+/* Touch screens get a d-pad; keyboards don't need it */
+.rg__pad {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .rg__help {
+    display: none;
+  }
+
+  .rg__pad {
+    display: grid;
+    grid-template-columns: repeat(3, 48px) 1fr;
+    gap: 4px;
+    margin-top: 6px;
+    font-family: var(--font-ui);
+  }
+
+  .rg__pad .btn {
+    min-height: 40px;
+    padding: 0;
+    font-size: 18px;
+  }
+
+  .rg__pad .rg__fire,
+  .rg__pad .rg__quit {
+    grid-column: 4;
+    font-size: 14px;
+  }
+
+  .rg__pad .rg__fire { grid-row: 1 / span 2; }
+  .rg__pad .rg__quit { grid-row: 3; }
+}
+
+.term__quick .btn {
+  min-height: 24px;
+  padding: 2px 8px;
+  font-family: ui-monospace, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+}
+
+.term__quick .btn:active {
+  padding: 3px 7px 1px 9px;
 }
 
 /* --- Taskbar -------------------------------------------------------------- */
@@ -1168,8 +1364,7 @@ html:not(.js) .taskbar__sound {
     width: auto;
   }
 
-  .about__grid,
-  .project--wide {
+  .about__grid {
     display: flex;
     flex-direction: column;
   }

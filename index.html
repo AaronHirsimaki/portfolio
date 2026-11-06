@@ -34,6 +34,8 @@
   </noscript>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/main.js" defer></script>
+  <script src="js/catmayhem-rogue.js" defer></script>
+  <script src="js/terminal.js" defer></script>
 </head>
 
 <body>
@@ -100,17 +102,16 @@
       <path fill="var(--icon-fill, #0a66c2)"
         d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     </symbol>
-    <symbol id="i-start" viewBox="0 0 32 32" shape-rendering="crispEdges">
-      <path fill="#000" d="M3 5h24v22H3z" />
-      <path fill="#c0c0c0" d="M4 6h22v20H4z" />
-      <path fill="#000080" d="M5 7h20v5H5z" />
-      <path fill="#1084d0" d="M15 7h10v5H15z" />
-      <path fill="#fff" d="M6 8h6v1H6zm16 1h2v2h-2z" />
-      <path fill="#fff" d="M5 13h20v12H5z" />
-      <path fill="#008080" d="M7 15h7v1H7zm0 3h12v1H7zm0 3h9v1H7z" />
-      <path fill="#c08000" d="M26 0h2v10h-2zm-4 4h10v2H22z" />
-      <path fill="#ffff00" d="M26 1h2v8h-2zm-3 3h8v2h-8z" />
-      <path fill="#fff" d="M26 4h2v2h-2z" />
+    <symbol id="i-tux" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#000" d="M6 1h4v1h-4zM5 2h6v1h-6zM5 3h1v1h-1zM7 3h2v1h-2zM10 3h1v1h-1zM5 4h2v1h-2zM9 4h2v1h-2zM5 5h1v1h-1zM10 5h1v1h-1zM4 6h3v1h-3zM9 6h3v1h-3zM4 7h2v1h-2zM10 7h2v1h-2zM3 8h2v1h-2zM11 8h2v1h-2zM3 9h1v1h-1zM12 9h1v1h-1zM2 10h2v1h-2zM12 10h2v1h-2zM2 11h2v1h-2zM12 11h2v1h-2zM3 12h1v1h-1zM12 12h1v1h-1zM5 13h1v1h-1zM10 13h1v1h-1zM6 14h4v1h-4z" />
+      <path fill="#fff" d="M6 3h1v1h-1zM9 3h1v1h-1zM6 7h4v1h-4zM5 8h6v1h-6zM4 9h8v4h-8zM6 13h4v1h-4z" />
+      <path fill="#f0a800" d="M7 4h2v1h-2zM6 5h4v1h-4zM7 6h2v1h-2zM2 13h3v1h-3zM11 13h3v1h-3zM1 14h5v1h-5zM10 14h5v1h-5z" />
+    </symbol>
+    <symbol id="i-terminal" viewBox="0 0 16 16" shape-rendering="crispEdges">
+      <path fill="#000" d="M0 1h16v12H0zM4 13h8v1H4zM3 14h10v2H3z" />
+      <path fill="#c0c0c0" d="M1 2h14v10H1zM4 14h8v1H4z" />
+      <path fill="#101010" d="M2 3h12v8H2z" />
+      <path fill="#33ff33" d="M3 4h1v1H3zM4 5h1v1H4zM5 6h1v1H5zM4 7h1v1H4zM3 8h1v1H3zM6 8h4v1H6z" />
     </symbol>
     <symbol id="i-shutdown" viewBox="0 0 32 32" shape-rendering="crispEdges">
       <path fill="#000" d="M4 6h20v18H4z" />
@@ -147,6 +148,9 @@
         <li><a class="desktop-icon" href="#catmayhem" data-open="catmayhem">
             <svg class="desktop-icon__img" aria-hidden="true"><use href="#i-cat" /></svg>
             <span class="desktop-icon__label">CatMayhem<wbr>.exe</span></a></li>
+        <li><a class="desktop-icon" href="#terminal" data-open="terminal">
+            <svg class="desktop-icon__img" aria-hidden="true"><use href="#i-terminal" /></svg>
+            <span class="desktop-icon__label">Terminal</span></a></li>
         <li><a class="desktop-icon" href="#contact" data-open="contact">
             <svg class="desktop-icon__img" aria-hidden="true"><use href="#i-mail" /></svg>
             <span class="desktop-icon__label">Contact</span></a></li>
@@ -205,7 +209,12 @@
           </ul>
         </div>
 
-        <p class="welcome__hint">Tip: open the icons on the desktop to look around.</p>
+        <div class="welcome__tip" role="note">
+          <svg class="welcome__tip-icon" aria-hidden="true"><use href="#i-bulb" /></svg>
+          <p><strong>Tip: this is a desktop, so explore it!</strong> Click the icons on the desktop to open
+            <strong>About Me</strong>, <strong>Projects</strong>, <strong>Skills</strong> and a playable
+            <strong>Cat Mayhem</strong> demo.</p>
+        </div>
       </div>
     </section>
 
@@ -355,30 +364,62 @@
           </article>
 
           <article class="project project--wide">
-            <img class="project__image" src="assets/projects/studentapp.webp" width="1200" height="608"
-              alt="StudentApp map view with bar markers around Kallio, Helsinki, above a list of nearby bars"
-              loading="lazy" decoding="async">
-            <div>
-              <p class="project__type">Web app</p>
-              <h3 class="project__title">StudentApp</h3>
-              <p>A map-based review platform for bar and pub restrooms, so students on a night out in Helsinki can
-                quickly find a clean, well-kept one.</p>
-              <ul class="bullets">
-                <li>Interactive Leaflet map of venues, plus a bar list with detail pop-ups</li>
-                <li>Sign-up, login and user reviews stored in Supabase</li>
-                <li>Star ratings, review form, profile and settings pages</li>
-              </ul>
-              <div class="tags">
-                <span class="tag">React</span>
-                <span class="tag">Vite</span>
-                <span class="tag">Supabase</span>
-                <span class="tag">Leaflet</span>
-                <span class="tag">React Router</span>
-              </div>
-              <div class="project__links">
-                <a href="https://github.com/AaronHirsimaki/StudentApp" target="_blank" rel="noopener noreferrer"
-                  class="btn"><svg class="btn__icon" aria-hidden="true"><use href="#i-github" /></svg> Source code</a>
-              </div>
+            <p class="project__type">Desktop app</p>
+            <h3 class="project__title">Canban</h3>
+            <p>A Kanban board and weekly planner for my game projects. The tools I wanted cost money, so I built
+              my own with Claude Code. That let me go from idea to a working tool fast, and I started using it
+              right away. I use it every day.</p>
+            <ul class="bullets">
+              <li>A board per project with WIP limits, labels, priorities, checklists, due dates and hour estimates</li>
+              <li>Week planner: drag cards from every project onto days, with hours planned against daily capacity</li>
+              <li>Today view with overdue and due-soon cards, so I know what to work on</li>
+              <li>Rust backend saves data to a local JSON file with atomic writes and a backup copy</li>
+            </ul>
+            <div class="project__gallery">
+              <a href="assets/projects/canban-board.webp" target="_blank"><img class="project__image" src="assets/projects/canban-board.webp"
+                  width="1356" height="862" alt="Canban board view with Backlog, This Week, In Progress and Blocked columns, colour-coded label filters and a project list in the sidebar" loading="lazy" decoding="async"></a>
+              <a href="assets/projects/canban-today.webp" target="_blank"><img class="project__image" src="assets/projects/canban-today.webp"
+                  width="1357" height="857" alt="Canban Today view showing the date, week number, done count and hours left of the day's capacity" loading="lazy" decoding="async"></a>
+            </div>
+            <div class="tags">
+              <span class="tag">Svelte 5</span>
+              <span class="tag">SvelteKit</span>
+              <span class="tag">TypeScript</span>
+              <span class="tag">Tauri</span>
+              <span class="tag">Rust</span>
+              <span class="tag">Claude Code</span>
+            </div>
+            <div class="project__links">
+              <a href="https://github.com/AaronHirsimaki/KanbanTool" target="_blank" rel="noopener noreferrer"
+                class="btn"><svg class="btn__icon" aria-hidden="true"><use href="#i-github" /></svg> Source code</a>
+            </div>
+          </article>
+
+          <article class="project project--wide">
+            <p class="project__type">Web app</p>
+            <h3 class="project__title">StudentApp</h3>
+            <p>A map-based review platform for bar and pub restrooms, so students on a night out in Helsinki can
+              quickly find a clean, well-kept one.</p>
+            <ul class="bullets">
+              <li>Interactive Leaflet map of venues, plus a bar list with detail pop-ups</li>
+              <li>Sign-up, login and user reviews stored in Supabase</li>
+              <li>Star ratings, review form, profile and settings pages</li>
+            </ul>
+            <div class="project__gallery">
+              <a href="assets/projects/studentapp.webp" target="_blank"><img class="project__image" src="assets/projects/studentapp.webp"
+                  width="1200" height="608" alt="StudentApp map view with bar markers around Kallio, Helsinki, above a list of nearby bars"
+                  loading="lazy" decoding="async"></a>
+            </div>
+            <div class="tags">
+              <span class="tag">React</span>
+              <span class="tag">Vite</span>
+              <span class="tag">Supabase</span>
+              <span class="tag">Leaflet</span>
+              <span class="tag">React Router</span>
+            </div>
+            <div class="project__links">
+              <a href="https://github.com/AaronHirsimaki/StudentApp" target="_blank" rel="noopener noreferrer"
+                class="btn"><svg class="btn__icon" aria-hidden="true"><use href="#i-github" /></svg> Source code</a>
             </div>
           </article>
 
@@ -449,8 +490,8 @@
         </div>
       </div>
       <div class="window__statusbar">
-        <p class="statusbar__cell">5 object(s)</p>
-        <p class="statusbar__cell">Web · Full-stack · Mobile · Games</p>
+        <p class="statusbar__cell">6 object(s)</p>
+        <p class="statusbar__cell">Web · Desktop · Full-stack · Mobile · Games</p>
       </div>
     </section>
 
@@ -472,6 +513,9 @@
               <span class="skill"><i class="devicon-html5-plain colored" aria-hidden="true"></i> HTML</span>
               <span class="skill"><i class="devicon-css3-plain colored" aria-hidden="true"></i> CSS</span>
               <span class="skill"><i class="devicon-vitejs-plain colored" aria-hidden="true"></i> Vite</span>
+              <span class="skill"><i class="devicon-svelte-plain colored" aria-hidden="true"></i> Svelte</span>
+              <span class="skill"><i class="devicon-typescript-plain colored" aria-hidden="true"></i> TypeScript</span>
+              <span class="skill"><i class="devicon-tauri-plain colored" aria-hidden="true"></i> Tauri</span>
             </div>
           </div>
           <div class="groupbox">
@@ -531,7 +575,6 @@
           <div class="groupbox skills__familiar">
             <h3 class="groupbox__legend">Also familiar with</h3>
             <div class="skills__badges">
-              <span class="skill"><i class="devicon-typescript-plain colored" aria-hidden="true"></i> TypeScript</span>
               <span class="skill"><i class="devicon-nextjs-plain" aria-hidden="true"></i> Next.js</span>
               <span class="skill"><i class="devicon-tailwindcss-original colored" aria-hidden="true"></i> Tailwind CSS</span>
               <span class="skill"><i class="devicon-maven-plain colored" aria-hidden="true"></i> Maven</span>
@@ -562,6 +605,32 @@
       <div class="window__statusbar">
         <p class="statusbar__cell game__hint">WASD + click to shoot</p>
         <p class="statusbar__cell">Survive the swarm</p>
+      </div>
+    </section>
+
+    <!-- Terminal: a small shell whose files are read from the other windows (js/terminal.js) -->
+    <section class="window" id="terminal" aria-labelledby="terminal-title" data-width="660">
+      <header class="window__titlebar">
+        <svg class="window__icon" aria-hidden="true"><use href="#i-terminal" /></svg>
+        <h2 class="window__title" id="terminal-title">Terminal</h2>
+      </header>
+      <div class="window__body window__body--flush">
+        <div class="term" id="term">
+          <div class="term__output" id="term-output" role="log" aria-live="polite"></div>
+          <form class="term__line" id="term-form">
+            <label class="term__prompt" for="term-input" id="term-prompt">aaron@portfolio:~$</label>
+            <input class="term__input" id="term-input" type="text" autocomplete="off" autocapitalize="off"
+              autocorrect="off" spellcheck="false" enterkeyhint="send">
+          </form>
+        </div>
+      </div>
+      <div class="window__statusbar term__quick" aria-label="Quick commands">
+        <button type="button" class="btn" data-cmd="help">help</button>
+        <button type="button" class="btn" data-cmd="neofetch">neofetch</button>
+        <button type="button" class="btn" data-cmd="./catmayhem">./catmayhem</button>
+        <button type="button" class="btn" data-cmd="ls projects">ls projects</button>
+        <button type="button" class="btn" data-cmd="cat about.txt">cat about.txt</button>
+        <button type="button" class="btn" data-cmd="contact">contact</button>
       </div>
     </section>
 
@@ -603,7 +672,7 @@
   <footer class="taskbar">
     <button type="button" class="btn taskbar__start" id="start-button" aria-haspopup="menu" aria-expanded="false"
       aria-controls="start-menu">
-      <svg class="taskbar__start-icon" aria-hidden="true"><use href="#i-start" /></svg>
+      <svg class="taskbar__start-icon" aria-hidden="true"><use href="#i-tux" /></svg>
       Start
     </button>
     <div class="start-menu" id="start-menu" role="menu" aria-label="Start" hidden>
@@ -617,6 +686,8 @@
             <svg aria-hidden="true"><use href="#i-computer" /></svg>Skills</a></li>
         <li role="none"><a role="menuitem" href="#catmayhem" data-open="catmayhem" class="start-menu__item">
             <svg aria-hidden="true"><use href="#i-cat" /></svg>Cat Mayhem</a></li>
+        <li role="none"><a role="menuitem" href="#terminal" data-open="terminal" class="start-menu__item">
+            <svg aria-hidden="true"><use href="#i-terminal" /></svg>Terminal</a></li>
         <li role="none"><a role="menuitem" href="#contact" data-open="contact" class="start-menu__item">
             <svg aria-hidden="true"><use href="#i-mail" /></svg>Contact</a></li>
         <li role="separator" class="start-menu__sep"></li>

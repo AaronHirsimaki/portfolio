@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     sync();
     return { play };
   })();
+  // Other scripts (the terminal game) play sounds by event
+  document.addEventListener('desktop:sound', (e) => Sound.play(e.detail));
 
   // --- Window manager ---
   const desktop = document.getElementById('desktop');
@@ -388,6 +390,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (opener.classList.contains('desktop-icon')) selectIcon(opener);
     openWindow(opener.dataset.open, { push: true });
   });
+
+  // Other scripts (the terminal) open windows by event, so they don't need the window manager's internals
+  document.addEventListener('desktop:open', (e) => openWindow(e.detail, { push: true }));
 
   // Desktop icons highlight like the real thing; clicking empty desktop clears it
   function selectIcon(icon) {
