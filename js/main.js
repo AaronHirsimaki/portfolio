@@ -1061,7 +1061,37 @@ document.addEventListener('DOMContentLoaded', () => {
     drawIdle();
   }
 
-  // --- Boot: open the linked window, or the Welcome screen ---
+  // Default boot on a wide screen: About_Me.txt and Welcome side by side, right of the icons.
+  // Both shrink proportionally to fit; returns false if they'd get too narrow to read.
+  function tileAboutAndWelcome() {
+    const about = windows.get('about'), welcome = windows.get('welcome');
+    const dw = desktop.clientWidth, dh = desktop.clientHeight;
+    const left = iconsRight() + GAP;
+    const wa = Number(about.el.dataset.width) || 600, ww = Number(welcome.el.dataset.width) || 600;
+    const scale = Math.min(1, (dw - left - 2 * GAP) / (wa + ww));
+    const MIN_TILE = 420;
+    if (wa * scale < MIN_TILE || ww * scale < MIN_TILE) return false;
+    [[about, left, wa * scale], [welcome, left + Math.round(wa * scale) + GAP, ww * scale]].forEach(([s, x, w]) => {
+      s.el.style.width = Math.round(w) + 'px';
+      s.el.style.height = '';
+      s.el.style.maxHeight = (dh - 2 * GAP) + 'px';
+      s.el.style.left = x + 'px';
+      s.el.style.top = GAP + 'px';
+      s.placed = true;
+      s.userSized = false;
+    });
+    return true;
+  }
+
+  // --- Boot: open the linked window; otherwise About + Welcome on desktop, just About on phones ---
   history.replaceState({ n: histIndex }, '', location.href);
-  openWindow(windowFromHash(), { animate: false });
+  if (location.hash && windowFromHash() !== 'welcome') {
+    openWindow(windowFromHash(), { animate: false });
+  } else if (smallScreen.matches) {
+    openWindow('about', { animate: false });
+  } else {
+    tileAboutAndWelcome();
+    openWindow('about', { animate: false });
+    openWindow('welcome', { animate: false });
+  }
 });
