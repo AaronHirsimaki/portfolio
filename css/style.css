@@ -1333,12 +1333,34 @@ html:not(.js) .taskbar__sound {
     justify-items: center;
   }
 
+  /* fixed, not absolute: stays put on screen even when the desktop is scrolled (see below) */
   .js .window {
-    inset: 0 !important;
+    position: fixed;
+    inset: 0 0 var(--taskbar-h) 0 !important;
     width: auto !important;
     height: auto !important;
     max-height: none !important;
     min-width: 0;
+  }
+
+  /* Welcome and About_Me.txt both open: one page, Welcome first, About Me below it as you scroll */
+  .desktop:has(> #welcome.window--open):has(> #about.window--open) {
+    overflow-y: auto;
+  }
+
+  .desktop:has(> #welcome.window--open):has(> #about.window--open) > .desktop__icons {
+    position: absolute;
+    inset: 0;
+  }
+
+  .desktop:has(> #welcome.window--open):has(> #about.window--open) > :is(#welcome, #about) {
+    position: relative;
+    inset: auto !important;
+    overflow: visible;
+  }
+
+  .desktop:has(> #welcome.window--open):has(> #about.window--open) > :is(#welcome, #about) :is(.window__body, .field) {
+    overflow: visible;
   }
 
   .window__resize {
