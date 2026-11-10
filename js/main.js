@@ -1083,14 +1083,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
-  // --- Boot: open the linked window; otherwise About + Welcome on desktop, just About on phones ---
+  // --- Boot: open the linked window; otherwise About + Welcome ---
   history.replaceState({ n: histIndex }, '', location.href);
   if (location.hash && windowFromHash() !== 'welcome') {
     openWindow(windowFromHash(), { animate: false });
-  } else if (smallScreen.matches) {
-    openWindow('about', { animate: false });
   } else {
-    tileAboutAndWelcome();
+    // Phones stack Welcome on top of About; wider screens put them side by side
+    if (!smallScreen.matches) tileAboutAndWelcome();
     openWindow('about', { animate: false });
     openWindow('welcome', { animate: false });
   }
